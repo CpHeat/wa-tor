@@ -99,8 +99,15 @@ class Interface:
         fish_population_input = Entry(self.window, textvariable=fish_population_value, width=30)
         fish_population_input.grid(row=9, column=2)
 
+        chronon_duration_label = Label(self.window, text="Chronon duration (in ms):")
+        chronon_duration_label.grid(row=10, column=1)
+        chronon_duration_value = IntVar()
+        chronon_duration_value.set(simulation_parameters['chronon_duration'])
+        chronon_duration_input = Entry(self.window, textvariable=chronon_duration_value, width=30)
+        chronon_duration_input.grid(row=10, column=2)
+
         start_button = Button(self.window, text="Start", command=self.set_grid_height)
-        start_button.grid(row=10, column=1)
+        start_button.grid(row=11, column=1)
 
     def set_grid_height(self):
         print("set grid height")
