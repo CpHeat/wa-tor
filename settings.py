@@ -1,23 +1,23 @@
-# taille de la grille (width/height)
+# Grid size (width/height)
 grid_width = 10
 grid_height = 10
-# nombre de poissons/requins
+# Sharks/Fishes number
 sharks_nb = 10
 fish_nb = 10
-# temps de reproduction poissons/requins
+# Reproduction cycle duration
 fish_reproduction_time = 5
 shark_reproduction_time = 5
-# temps de famine des requinq
+# Sharks starvation time
 shark_starvation_time = 3
-# energie récupérée en mangeant
+# Energy gain by eating
 shark_energy_gain = 3
-# durée de la simulation en chronons
+# Simulation duration (in chronons)
 simulation_length = 50
 
 
 
-#Intervalle entre deux chronons (en ms)
+# Time interval between chronons (in ms)
 chronon_interval = 2000
-#Cell size
+# Cell size
 cell_size = 50
 
