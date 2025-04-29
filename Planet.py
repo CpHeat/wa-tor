@@ -17,7 +17,7 @@ class Planet:
         for i in random_indices:
             row = i // self.width 
             col = i % self.width 
-            self.grid[row][col] = Fish.Fish(row, col)
+            self.grid[row][col] = None
         
 
 
@@ -29,7 +29,7 @@ class Planet:
     
     def get_neighbors(self, x,y): 
         # from the position
-        neighbors = [None]
+        neighbors = []
         new_y = y-1 if y != 0 else self.height-1
         neighbors.append(self.grid[x][new_y]) # N
         new_y = y+1 if y != self.height-1 else 0
