@@ -1,5 +1,5 @@
 .venv
 .idea
-todo
+todo.py
 test.py
 __pycache__
