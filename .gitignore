@@ -2,3 +2,4 @@
 .idea
 todo
 test.py
+__pycache__
