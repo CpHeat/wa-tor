@@ -1,11 +1,11 @@
-from settings import fish_reproduction_time, grid_width , grid_height
+from settings import simulation_parameters
 import random
 
 class Fish:
     def __init__(self, x :int, y:int):
         self.x = x
         self.y = y
-        self.reproduction_time = fish_reproduction_time
+        self.reproduction_time = simulation_parameters["fish_reproduction_time"]
         self.reproduction_left =  self.reproduction_time
 
     def move(self, list):
@@ -20,23 +20,23 @@ class Fish:
             match(random.choice(direction)):
                 case "N":
                     if(self.y == 0):
-                        self.y = grid_height - 1
+                        self.y = simulation_parameters["grid_height"] - 1
                     else:
                         self.y = self.y - 1
                 case "S":
                     #verif en bas du tableau
-                    if(grid_height - 1 == self.y):
+                    if(simulation_parameters["grid_height"] - 1 == self.y):
                         self.y = 0
                     else:
                         self.y = self.y + 1
                 case "W":
                     if(self.x == 0):
-                        self.x = grid_width - 1
+                        self.x = simulation_parameters["grid_width"] - 1
                     else:
                         self.x = self.x - 1
                 case "E":
                     #verif à droite du tableau
-                    if(grid_width - 1 == self.x):
+                    if(simulation_parameters["grid_width"] - 1 == self.x):
                         self.x = 0
                     else :
                         self.x = self.x + 1
