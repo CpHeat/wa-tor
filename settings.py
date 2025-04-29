@@ -13,3 +13,11 @@ shark_starvation_time = 3
 shark_energy_gain = 3
 # durée de la simulation en chronons
 simulation_length = 50
+
+
+
+#Intervalle entre deux chronons (en ms)
+chronon_interval = 2000
+#Cell size
+cell_size = 50
+
