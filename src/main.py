@@ -12,4 +12,4 @@ grid = [
 ]
 
 def draw():
-    return "b"
+    return "c"
