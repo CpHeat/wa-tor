@@ -6,18 +6,15 @@ class Planet:
         self.width = width
         self.num_fish = num_fish
         self.num_shark = num_shark
-        self.grid = [[]]
-        self.entities_fish = []
-        self.entities_shark = []
+        self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
+        self.entities = []
     
     def populate(self):
-        
-        self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         random_indices = random.sample(range(self.height * self.width), self.num_fish+self.num_shark)
         for i in random_indices:
             row = i // self.width 
             col = i % self.width 
-            self.grid[row][col] = None
+            self.grid[row][col] = Fish.Fish(row,col)
         
 
 
@@ -44,7 +41,10 @@ class Planet:
         return neighbors
         
         
-        
+    def check_entities(self):
+        for entity in self.entities :
+            entity.move(self.get_neighbors(entity.x,entity.y))
+         
     
 
  
