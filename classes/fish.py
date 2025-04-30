@@ -12,12 +12,28 @@ class Fish:
         old_position = {"x": self.x, "y": self.y}
         verif = {"N": list[0] , "S": list[1], "E": list[2], "W": list[3]}
         direction = []
+        list_result = []
         for key, value in verif.items():
             if(value == None):
                 direction.append(key)               
         
         if( len(direction) > 0):
-            match(random.choice(direction)):
+            list_result = self.choice_direction(direction)
+
+        if(len(list_result) == 1):
+            new_position = list_result[0]
+        else:
+            new_position = old_position       
+            list_result.append(new_position)
+
+        if(self.reproduce(new_position , old_position) == True):
+            list_result.append(old_position)
+
+        return list_result
+    
+
+    def choice_direction(self, list):
+        match(random.choice(list)):
                 case "N":
                     if(self.y == 0):
                         self.y = simulation_parameters["grid_height"] - 1
@@ -41,13 +57,9 @@ class Fish:
                     else :
                         self.x = self.x + 1
         
-        list_result = [{"x": self.x, "y": self.y}]
+        return [{"x": self.x, "y": self.y}]
 
-        if(self.reproduce(list_result[0], old_position) == True):
-            list_result.append(old_position)
 
-        return list_result
-    
 
     def reproduce(self, new_position, old_position):
         if(self.reproduction_left > 0):
