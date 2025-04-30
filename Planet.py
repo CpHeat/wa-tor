@@ -1,16 +1,19 @@
 import random
 from Fish import Fish
 from Shark import Shark
+from settings import simulation_parameters
 class Planet:
-    def __init__(self, height:int, width:int, num_fish:int, num_shark:int):
+    def __init__(self):
         '''Initialize empty grid
         '''
-        self.height = height
-        self.width = width
-        self.num_fish = num_fish
-        self.num_shark = num_shark
+        self.height = simulation_parameters.get('grid_height')
+        self.width = simulation_parameters.get('grid_width')
+        self.num_fish = simulation_parameters.get('shark_nb')
+        self.num_shark = simulation_parameters.get('fish_nb')
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         self.entities = []
+        self.populate()
+        
     
     def populate(self):
         '''Populate randomly the grid with fishes and sharks
@@ -71,9 +74,9 @@ class Planet:
         entity_copy = self.entities.copy()
         for entity in entity_copy :
             choice = entity.move(self.get_neighbors(entity.x,entity.y))
-            if choice:
-                target_x = choice.x
-                target_y = choice.x
+            if len(choice) == 2:
+                target_x = choice[0].get('x')
+                target_y = choice[0].get('y')
                 old_x = entity.x
                 old_y = entity.y
                 if isinstance(entity,Shark):
@@ -84,8 +87,9 @@ class Planet:
                         entity.y = target_y
                         self.grid[target_x][target_y] = entity
                         self.entities.append(entity)
+                        #entity.eat()
                         self.num_fish -=1
-                        entity.energy += energy
+                        
                     elif self.grid[target_x][target_y] is None:
                         entity.x = target_x
                         entity.y = target_y
@@ -94,22 +98,22 @@ class Planet:
                         pass
                         
                     # to reproduce
-                    if entity.age >= reprod_time:
-                        baby_shark = Shark(old_x,old_y)
-                        self.grid[old_x][old_y] = baby_shark 
-                        self.entities.append(baby_shark)
-                        self.num_shark +=1
+                    
+                    baby_shark = Shark(old_x,old_y)
+                    self.grid[old_x][old_y] = baby_shark 
+                    self.entities.append(baby_shark)
+                    self.num_shark +=1
                 elif isinstance(entity,Fish):
                     if self.grid[target_x][target_y] is None:
                         # to move
                         entity.x = target_x
                         entity.y = target_y
                         self.grid[target_x][target_y] = entity
-                        if entity.age >= reprod_time:
-                            baby_fish = Fish(old_x,old_y)
-                            self.grid[old_x][old_y] = baby_fish
-                            self.entities.append(baby_fish)
-                            self.num_fish +=1
+                        # to reproduce
+                        baby_fish = Fish(old_x,old_y)
+                        self.grid[old_x][old_y] = baby_fish
+                        self.entities.append(baby_fish)
+                        self.num_fish +=1
                         
                     
                           
@@ -119,8 +123,8 @@ class Planet:
  
  
 ############ main
-P = Planet(5,5,2,2)
-P.populate()
+P = Planet()
+
 print(P.get_grid())
 print(P.entities)
 print("voisins:", P.get_neighbors(0,0))
