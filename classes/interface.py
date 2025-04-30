@@ -1,7 +1,8 @@
-from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage
+from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox
 
 from PIL import Image, ImageTk
 
+from classes.planet import Fish, Shark
 from services.simulation_control import SimulationControl
 from settings import CELL_SIZE, simulation_parameters
 
@@ -13,6 +14,9 @@ class Interface:
         self.frames = {}
         self.images = {}
         self.image_ids = []
+        self.start_button = None
+        self.pause_button = None
+        self.stop_button = None
 
     def initialize_interface(self):
         self.create_window()
@@ -38,6 +42,8 @@ class Interface:
         history_frame = Frame(main_frame, bg="red")
         history_frame.grid(row=2, column=0, columnspan=2)
         self.frames['history_frame'] = history_frame
+        alert_frame = Frame(main_frame,bg="orange")
+        alert_frame.grid(row=2, column=2)
 
         return self.window
 
@@ -90,6 +96,7 @@ class Interface:
         grid_width_value.set(simulation_parameters['grid_width'])
         grid_width_input = Entry(self.frames['control_frame'], textvariable=grid_width_value, width=30)
         grid_width_input.grid(row=1, column=1)
+
 
         simulation_length_label = Label(self.frames['control_frame'], text="Simulation length:")
         simulation_length_label.grid(row=2, column=0)
@@ -154,7 +161,7 @@ class Interface:
         chronon_duration_input = Entry(self.frames['control_frame'], textvariable=chronon_duration_value, width=30)
         chronon_duration_input.grid(row=10, column=1)
 
-        start_button = Button(self.frames['control_frame'], text="Start", command=lambda:SimulationControl.start_simulation(
+        self.start_button = Button(self.frames['control_frame'], text="Start", command=lambda:SimulationControl.start_simulation(
             self,
             grid_height_value,
             grid_width_value,
@@ -168,7 +175,13 @@ class Interface:
             fish_starting_population_value,
             chronon_duration_value
         ))
-        start_button.grid(row=11, column=0, columnspan=2)
+        self.start_button.grid(row=11, column=0)
+
+        self.pause_button = Button(self.frames['control_frame'], text="Pause", command=lambda:SimulationControl.pause_simulation(self))
+        self.pause_button.grid(row=11, column=1)
+
+        self.stop_button = Button(self.frames['control_frame'], text="Stop", command=lambda:SimulationControl.stop_simulation(self))
+        self.stop_button.grid(row=11, column=2)
 
     def draw_canvas(self):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
@@ -178,6 +191,9 @@ class Interface:
 
         self.canvas = canvas
 
+    def draw_alerts(self):
+        pass
+
     def draw_wator(self, grid):
 
         if not self.image_ids:
@@ -186,9 +202,9 @@ class Interface:
             for x, row in enumerate(grid):
                 row_ids = []
                 for y, cell in enumerate(row):
-                    if cell == "fish":
+                    if isinstance(cell, Fish):
                         img = self.images.get(cell, self.images["fish"])
-                    elif cell == "shark":
+                    elif isinstance(cell, Shark):
                         img = self.images.get(cell, self.images["shark"])
                     else:
                         img = self.images.get(cell, self.images["empty"])
@@ -201,13 +217,18 @@ class Interface:
         else:
             for x, row in enumerate(grid):
                 for y, cell in enumerate(row):
-                    print(cell)
-                    if cell == "fish":
-                        print("really fish")
+                    if isinstance(cell, Fish):
                         img = self.images.get(cell, self.images["fish"])
-                    elif cell == "shark":
+                    elif isinstance(cell, Shark):
                         img = self.images.get(cell, self.images["shark"])
                     else:
                         img = self.images.get(cell, self.images["empty"])
                     self.canvas.itemconfig(self.image_ids[x][y], image=img)
-                    print(f"x={x}, y={y}, cell={cell}, image={img}")
+
+    def reset_interface(self):
+        if self.image_ids:
+            for row in self.image_ids:
+                for cell in row:
+                    img = self.images.get(cell, self.images["empty"])
+                    self.canvas.itemconfig(cell, image=img)
+                    self.pause_button.config(text="Pause")

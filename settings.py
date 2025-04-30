@@ -15,9 +15,9 @@ simulation_parameters = {
     # Starting energy of sharks
     'shark_starting_energy': 5,
     # Simulation duration (in chronons)
-    'simulation_duration': 50,
+    'simulation_duration': 20,
     # Chronon duration (in ms)
-    'chronon_duration': 2000
+    'chronon_duration': 5000
 }
 
 # Cell size
