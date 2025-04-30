@@ -1,8 +1,7 @@
-from tkinter import Canvas, Tk, NW, Button, Entry, IntVar, Label
+from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW
 
 from PIL import Image, ImageTk
 
-from test import print_height
 from settings import CELL_SIZE, simulation_parameters
 
 
@@ -28,7 +27,6 @@ class Interface:
         self.images['shark_image'] = shark_image
 
     def create_controls(self):
-
         grid_height_label = Label(self.window, text="Grid height:")
         grid_height_label.grid(row=0, column=1)
         grid_height_value = IntVar()
@@ -106,19 +104,14 @@ class Interface:
         chronon_duration_input = Entry(self.window, textvariable=chronon_duration_value, width=30)
         chronon_duration_input.grid(row=10, column=2)
 
-        start_button = Button(self.window, text="Start", command=self.set_grid_height)
-        start_button.grid(row=11, column=1)
+        start_button = Button(self.window, text="Start", command='save')
+        start_button.grid(row=11, column=1, columnspan=2)
 
-    def set_grid_height(self):
-        print("set grid height")
-        simulation_parameters['grid_height'] = 12
-        print_height()
-
-    def draw_wa_tor(self, grid):
+    def draw_wator(self, grid):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
         canvas_height = simulation_parameters['grid_height'] * CELL_SIZE
         canvas = Canvas(self.window, width=canvas_width, height=canvas_height, bg='#42b6f5')
-        canvas.grid(row=0, column=0, rowspan=11)
+        canvas.grid(row=0, column=0, rowspan=12)
 
         for x, row in enumerate(grid):
             for y, cell in enumerate(row):

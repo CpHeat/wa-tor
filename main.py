@@ -17,6 +17,6 @@ interface = Interface()
 interface.create_window()
 interface.create_assets()
 interface.create_controls()
-interface.draw_wa_tor(grid)
+interface.draw_wator(grid)
 
 interface.window.mainloop()
