@@ -30,9 +30,9 @@ class Planet:
         '''Populate randomly the grid with fishes and sharks
         '''
         random_indices = random.sample(range(self.height * self.width), self.num_fish+self.num_shark)
-        print("random_indices",random_indices)
+        
         random_indices_shark = random.sample(random_indices, self.num_shark)
-        print("random_indices_shark",random_indices_shark)
+        
         for i in random_indices_shark:
             row = i // self.width 
             col = i % self.width 
@@ -41,7 +41,7 @@ class Planet:
             self.entities.append(S)
         
         random_indices_fish = list(set(random_indices)- set(random_indices_shark))
-        print("random_indices_fish",random_indices_fish)
+        
         for i in random_indices_fish:
             row = i // self.width 
             col = i % self.width 
@@ -120,8 +120,7 @@ class Planet:
         self.entities = []
         for entity in entity_copy :
             choice =   [{'x':0, 'y':1},{'x':0, 'y':2}]      #entity.move(self.get_neighbors(entity.x,entity.y))
-            #print("check_entities: choice index 0", choice[0])
-            #print(f"check_entities: grid", self.grid)
+           
             
             if len(choice) == 2: # move and reproduce entity
                 target_x = choice[0].get('x')
