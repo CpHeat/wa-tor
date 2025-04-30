@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame
+from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage
 
 from PIL import Image, ImageTk
 
@@ -9,8 +9,17 @@ from settings import CELL_SIZE, simulation_parameters
 class Interface:
     def __init__(self):
         self.window = None
+        self.canvas = None
         self.frames = {}
         self.images = {}
+        self.image_ids = []
+
+    def initialize_interface(self):
+        self.create_window()
+        self.create_assets()
+        self.draw_canvas()
+        self.draw_counter()
+        self.draw_controls()
 
     def create_window(self):
         self.window = Tk()
@@ -41,8 +50,15 @@ class Interface:
         shark_image = shark_image.resize((CELL_SIZE, CELL_SIZE))
         shark_image = ImageTk.PhotoImage(shark_image)
 
-        self.images['fish_image'] = fish_image
-        self.images['shark_image'] = shark_image
+        empty_image = Image.open("resources/empty.png")
+        empty_image = empty_image.resize((CELL_SIZE, CELL_SIZE))
+        empty_image = ImageTk.PhotoImage(empty_image)
+
+        self.images = {
+            'fish': fish_image,
+            'shark': shark_image,
+            'empty': empty_image
+        }
 
     def draw_counter(self):
         fish_label = Label(self.frames['counter_frame'], text="Fishes:", bg="yellow")
@@ -124,10 +140,10 @@ class Interface:
         shark_starting_population_input = Entry(self.frames['control_frame'], textvariable=shark_starting_population_value, width=30)
         shark_starting_population_input.grid(row=8, column=1)
 
-        fish_starting_population_label = Label(self.frames['control_frame'], text="Fish population:")
+        fish_starting_population_label = Label(self.frames['control_frame'], text="Fish starting population:")
         fish_starting_population_label.grid(row=9, column=0)
         fish_starting_population_value = IntVar()
-        fish_starting_population_value.set(simulation_parameters['fish_population'])
+        fish_starting_population_value.set(simulation_parameters['fish_starting_population'])
         fish_starting_population_input = Entry(self.frames['control_frame'], textvariable=fish_starting_population_value, width=30)
         fish_starting_population_input.grid(row=9, column=1)
 
@@ -138,7 +154,8 @@ class Interface:
         chronon_duration_input = Entry(self.frames['control_frame'], textvariable=chronon_duration_value, width=30)
         chronon_duration_input.grid(row=10, column=1)
 
-        start_button = Button(self.frames['control_frame'], text="Start", command=SimulationControl.start_simulation(
+        start_button = Button(self.frames['control_frame'], text="Start", command=lambda:SimulationControl.start_simulation(
+            self,
             grid_height_value,
             grid_width_value,
             simulation_length_value,
@@ -153,15 +170,44 @@ class Interface:
         ))
         start_button.grid(row=11, column=0, columnspan=2)
 
-    def draw_wator(self, grid):
+    def draw_canvas(self):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
         canvas_height = simulation_parameters['grid_height'] * CELL_SIZE
         canvas = Canvas(self.frames['simulation_frame'], width=canvas_width, height=canvas_height, bg='#42b6f5')
         canvas.grid(row=0, column=0)
 
-        for x, row in enumerate(grid):
-            for y, cell in enumerate(row):
-                if cell == "fish":
-                    canvas.create_image(x * CELL_SIZE, y * CELL_SIZE, anchor=NW, image=self.images['fish_image'])
-                elif cell == "shark":
-                    canvas.create_image(x * CELL_SIZE, y * CELL_SIZE, anchor=NW, image=self.images['shark_image'])
+        self.canvas = canvas
+
+    def draw_wator(self, grid):
+
+        if not self.image_ids:
+            self.image_ids = []
+
+            for x, row in enumerate(grid):
+                row_ids = []
+                for y, cell in enumerate(row):
+                    if cell == "fish":
+                        img = self.images.get(cell, self.images["fish"])
+                    elif cell == "shark":
+                        img = self.images.get(cell, self.images["shark"])
+                    else:
+                        img = self.images.get(cell, self.images["empty"])
+
+                    img_id = self.canvas.create_image(
+                        y * CELL_SIZE, x * CELL_SIZE, anchor=NW, image=img
+                    )
+                    row_ids.append(img_id)
+                self.image_ids.append(row_ids)
+        else:
+            for x, row in enumerate(grid):
+                for y, cell in enumerate(row):
+                    print(cell)
+                    if cell == "fish":
+                        print("really fish")
+                        img = self.images.get(cell, self.images["fish"])
+                    elif cell == "shark":
+                        img = self.images.get(cell, self.images["shark"])
+                    else:
+                        img = self.images.get(cell, self.images["empty"])
+                    self.canvas.itemconfig(self.image_ids[x][y], image=img)
+                    print(f"x={x}, y={y}, cell={cell}, image={img}")

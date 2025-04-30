@@ -1,23 +1,10 @@
 from classes.interface import Interface
 
-grid = [
-    ["fish",None,None,None,None,"shark",None,None,"fish","shark"],
-    [None,None,"fish",None,None,None,None,None,None,None],
-    [None,None,None,None,None,None,None,None,"shark",None],
-    [None,"shark",None,None,None,None,None,None,None,None],
-    [None,None,None,None,"fish",None,None,None,None,None],
-    [None,None,None,None,None,None,None,None,"fish",None],
-    [None,"fish",None,None,"shark",None,None,None,None,None],
-    [None,None,None,None,None,None,None,None,None,None],
-    [None,None,"shark",None,None,"fish",None,"shark",None,None],
-    ["shark",None,None,None,None,None,None,None,None,"shark"],
-]
+interface = None
 
-interface = Interface()
-interface.create_window()
-interface.create_assets()
-interface.draw_counter()
-interface.draw_controls()
-interface.draw_wator(grid)
+if __name__ == "__main__":
 
-interface.window.mainloop()
+    interface = Interface()
+    interface.initialize_interface()
+
+    interface.window.mainloop()
