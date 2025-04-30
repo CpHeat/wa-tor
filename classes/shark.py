@@ -24,7 +24,7 @@ class Shark(Fish):
         direction_fish = []
         list_result = []
         for key, value in verif.items():
-            if(isinstance(value,Fish)):
+            if((isinstance(value,Fish)) and (isinstance(value,Shark) == False)):
                 direction_fish.append(key)
             elif(value == None):
                 direction.append(key)          
