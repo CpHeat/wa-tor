@@ -125,7 +125,8 @@ class Planet:
         self.entities = []
         for entity in entity_copy :
             choice =   [{'x':0, 'y':1},{'x':0, 'y':2}]      #entity.move(self.get_neighbors(entity.x,entity.y))
-           
+            print("check_entities: choice", choice)
+            print(f"check_entities: grid", self.grid)
             
             if len(choice) == 2: # move and reproduce entity
                 target_x = choice[0].get('x')
