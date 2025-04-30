@@ -12,6 +12,7 @@ class Fish:
         old_position = {"x": self.x, "y": self.y}
         verif = {"N": list[0] , "S": list[1], "E": list[2], "W": list[3]}
         direction = []
+        list_result = []
         for key, value in verif.items():
             if(value == None):
                 direction.append(key)               
@@ -19,7 +20,12 @@ class Fish:
         if( len(direction) > 0):
             list_result = self.choice_direction(direction)
 
-        new_position = list_result[0] if list_result else old_position
+        if(len(list_result) == 1):
+            new_position = list_result[0]
+        else:
+            new_position = old_position       
+            list_result.append(new_position)
+
         if(self.reproduce(new_position , old_position) == True):
             list_result.append(old_position)
 
@@ -55,7 +61,7 @@ class Fish:
 
 
 
-    def reproduce(self, new_position = [], old_position = []):
+    def reproduce(self, new_position, old_position):
         if(self.reproduction_left > 0):
             self.reproduction_left -= 1
 
