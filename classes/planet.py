@@ -1,6 +1,10 @@
 from settings import simulation_parameters
+from classes.fish import Fish
+from classes.shark import Shark
 import random
 
+
+'''
 class Fish:
     def __init__(self,x,y):
         self.x = x
@@ -10,6 +14,7 @@ class Shark:
     def __init__(self,x,y):
         self.x = x
         self.y = y
+'''
 
 
 
