@@ -17,7 +17,17 @@ class Fish:
                 direction.append(key)               
         
         if( len(direction) > 0):
-            match(random.choice(direction)):
+            list_result = self.choice_direction(direction)
+
+        new_position = list_result[0] if list_result else old_position
+        if(self.reproduce(new_position , old_position) == True):
+            list_result.append(old_position)
+
+        return list_result
+    
+
+    def choice_direction(self, list):
+        match(random.choice(list)):
                 case "N":
                     if(self.y == 0):
                         self.y = simulation_parameters["grid_height"] - 1
@@ -41,15 +51,11 @@ class Fish:
                     else :
                         self.x = self.x + 1
         
-        list_result = [{"x": self.x, "y": self.y}]
+        return [{"x": self.x, "y": self.y}]
 
-        if(self.reproduce(list_result[0], old_position) == True):
-            list_result.append(old_position)
 
-        return list_result
-    
 
-    def reproduce(self, new_position, old_position):
+    def reproduce(self, new_position = [], old_position = []):
         if(self.reproduction_left > 0):
             self.reproduction_left -= 1
 
