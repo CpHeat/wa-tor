@@ -1,3 +1,4 @@
+# Default parameters
 simulation_parameters = {
     # Grid size (width/height)
     'grid_width': 10,
@@ -10,15 +11,13 @@ simulation_parameters = {
     'shark_reproduction_time': 5,
     # Sharks starvation time
     'shark_starvation_time': 3,
-    # Energy gain by eating
-    'shark_energy_gain': 3,
     # Starting energy of sharks
     'shark_starting_energy': 5,
     # Simulation duration (in chronons)
     'simulation_duration': 20,
     # Chronon duration (in ms)
-    'chronon_duration': 5000
+    'chronon_duration': 500
 }
 
-# Cell size
+# Cell size (in px)
 CELL_SIZE = 50

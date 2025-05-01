@@ -1,4 +1,4 @@
-from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox
+from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError
 
 from PIL import Image, ImageTk
 
@@ -8,24 +8,44 @@ from settings import CELL_SIZE, simulation_parameters
 
 
 class Interface:
+
     def __init__(self):
+
         self.window = None
         self.canvas = None
         self.frames = {}
+
         self.images = {}
         self.image_ids = []
+
+        self.grid_height_value = None
+        self.grid_width_value = None
+        self.simulation_length_value = None
+        self.fish_reproduction_time_value = None
+        self.shark_reproduction_time_value = None
+        self.shark_starvation_time_value = None
+        self.shark_starting_energy_value = None
+        self.shark_starting_population_value = None
+        self.fish_starting_population_value = None
+        self.chronon_duration_value = None
+
         self.start_button = None
         self.pause_button = None
         self.stop_button = None
 
+        self.alert_label = None
+
     def initialize_interface(self):
+
         self.create_window()
         self.create_assets()
         self.draw_canvas()
         self.draw_counter()
         self.draw_controls()
+        self.draw_alerts()
 
     def create_window(self):
+
         self.window = Tk()
         main_frame = Frame(self.window)
         main_frame.grid(row=0, column=0)
@@ -39,15 +59,17 @@ class Interface:
         control_frame = Frame(main_frame, bg="purple")
         control_frame.grid(row=1, column=1)
         self.frames['control_frame'] = control_frame
+        control_buttons_frame = Frame(control_frame, bg="black")
+        control_buttons_frame.grid(row=10, column=0, columnspan=3)
+        self.frames['control_buttons_frame'] = control_buttons_frame
         history_frame = Frame(main_frame, bg="red")
         history_frame.grid(row=2, column=0, columnspan=2)
         self.frames['history_frame'] = history_frame
-        alert_frame = Frame(main_frame,bg="orange")
-        alert_frame.grid(row=2, column=2)
 
         return self.window
 
     def create_assets(self):
+
         fish_image = Image.open("resources/fish.png")
         fish_image = fish_image.resize((CELL_SIZE, CELL_SIZE))
         fish_image = ImageTk.PhotoImage(fish_image)
@@ -67,6 +89,7 @@ class Interface:
         }
 
     def draw_counter(self):
+
         fish_label = Label(self.frames['counter_frame'], text="Fishes:", bg="yellow")
         fish_label.grid(row=0, column=0)
         fish_nb = Label(self.frames['counter_frame'], text="12", bg="yellow")
@@ -82,106 +105,46 @@ class Interface:
         chronons_nb = Label(self.frames['counter_frame'], text="8", bg="yellow")
         chronons_nb.grid(row=0, column=5)
 
+    @classmethod
+    def input_component(cls, frame, text, default_value, row):
+
+        component_label = Label(frame, text=text)
+        component_label.grid(row=row, column=0)
+        component_value = IntVar()
+        component_value.set(default_value)
+        component_input = Entry(frame, textvariable=component_value, width=30)
+        component_input.grid(row=row, column=1)
+
+        return component_value
+
     def draw_controls(self):
-        grid_height_label = Label(self.frames['control_frame'], text="Grid height:")
-        grid_height_label.grid(row=0, column=0)
-        grid_height_value = IntVar()
-        grid_height_value.set(simulation_parameters['grid_height'])
-        grid_height_input = Entry(self.frames['control_frame'], textvariable=grid_height_value, width=30)
-        grid_height_input.grid(row=0, column=1)
 
-        grid_width_label = Label(self.frames['control_frame'], text="Grid width:")
-        grid_width_label.grid(row=1, column=0)
-        grid_width_value = IntVar()
-        grid_width_value.set(simulation_parameters['grid_width'])
-        grid_width_input = Entry(self.frames['control_frame'], textvariable=grid_width_value, width=30)
-        grid_width_input.grid(row=1, column=1)
+        self.grid_height_value = self.input_component(self.frames['control_frame'], "Grid height:", simulation_parameters['grid_height'], 0)
+        self.grid_width_value = self.input_component(self.frames['control_frame'], "Grid width:", simulation_parameters['grid_width'], 1)
+        self.fish_starting_population_value = self.input_component(self.frames['control_frame'], "Fish starting population:", simulation_parameters['fish_starting_population'], 2)
+        self.fish_reproduction_time_value = self.input_component(self.frames['control_frame'], "Fish reproduction time:", simulation_parameters['fish_reproduction_time'], 3)
+        self.shark_starting_population_value = self.input_component(self.frames['control_frame'], "Shark starting population:", simulation_parameters['shark_starting_population'], 4)
+        self.shark_reproduction_time_value = self.input_component(self.frames['control_frame'], "Shark reproduction time:", simulation_parameters['shark_reproduction_time'], 5)
+        self.shark_starting_energy_value = self.input_component(self.frames['control_frame'], "Shark starting energy:", simulation_parameters['shark_starting_energy'], 6)
+        self.shark_starvation_time_value = self.input_component(self.frames['control_frame'], "Shark starvation time:", simulation_parameters['shark_starvation_time'], 7)
+        self.simulation_length_value = self.input_component(self.frames['control_frame'], "Simulation duration:", simulation_parameters['simulation_duration'], 8)
+        self.chronon_duration_value = self.input_component(self.frames['control_frame'], "Chronon duration (in ms):", simulation_parameters['chronon_duration'], 9)
 
+        self.start_button = Button(self.frames['control_buttons_frame'], text="Start", command=lambda:self.check_parameters())
+        self.start_button.grid(row=0, column=0)
 
-        simulation_length_label = Label(self.frames['control_frame'], text="Simulation length:")
-        simulation_length_label.grid(row=2, column=0)
-        simulation_length_value = IntVar()
-        simulation_length_value.set(simulation_parameters['simulation_duration'])
-        simulation_length_input = Entry(self.frames['control_frame'], textvariable=simulation_length_value, width=30)
-        simulation_length_input.grid(row=2, column=1)
+        self.pause_button = Button(self.frames['control_buttons_frame'], text="Pause", command=lambda:SimulationControl.pause_simulation(self))
+        self.pause_button.grid(row=0, column=1)
 
-        fish_reproduction_time_label = Label(self.frames['control_frame'], text="Fish reproduction time:")
-        fish_reproduction_time_label.grid(row=3, column=0)
-        fish_reproduction_time_value = IntVar()
-        fish_reproduction_time_value.set(simulation_parameters['fish_reproduction_time'])
-        fish_reproduction_time_input = Entry(self.frames['control_frame'], textvariable=fish_reproduction_time_value, width=30)
-        fish_reproduction_time_input.grid(row=3, column=1)
+        self.stop_button = Button(self.frames['control_buttons_frame'], text="Stop", command=lambda:SimulationControl.stop_simulation(self))
+        self.stop_button.grid(row=0, column=2)
 
-        shark_reproduction_time_label = Label(self.frames['control_frame'], text="Shark reproduction time:")
-        shark_reproduction_time_label.grid(row=4, column=0)
-        shark_reproduction_time_value = IntVar()
-        shark_reproduction_time_value.set(simulation_parameters['shark_reproduction_time'])
-        shark_reproduction_time_input = Entry(self.frames['control_frame'], textvariable=shark_reproduction_time_value, width=30)
-        shark_reproduction_time_input.grid(row=4, column=1)
+    def update_canvas(self):
+        canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
+        canvas_height = simulation_parameters['grid_height'] * CELL_SIZE
 
-        shark_starvation_time_label = Label(self.frames['control_frame'], text="Shark starvation time:")
-        shark_starvation_time_label.grid(row=5, column=0)
-        shark_starvation_time_value = IntVar()
-        shark_starvation_time_value.set(simulation_parameters['shark_starvation_time'])
-        shark_starvation_time_input = Entry(self.frames['control_frame'], textvariable=shark_starvation_time_value, width=30)
-        shark_starvation_time_input.grid(row=5, column=1)
-
-        shark_starting_energy_label = Label(self.frames['control_frame'], text="Shark starting energy:")
-        shark_starting_energy_label.grid(row=6, column=0)
-        shark_starting_energy_value = IntVar()
-        shark_starting_energy_value.set(simulation_parameters['shark_starting_energy'])
-        shark_starting_energy_input = Entry(self.frames['control_frame'], textvariable=shark_starting_energy_value, width=30)
-        shark_starting_energy_input.grid(row=6, column=1)
-
-        shark_energy_gain_label = Label(self.frames['control_frame'], text="Shark energy gain:")
-        shark_energy_gain_label.grid(row=7, column=0)
-        shark_energy_gain_value = IntVar()
-        shark_energy_gain_value.set(simulation_parameters['shark_energy_gain'])
-        shark_energy_gain_input = Entry(self.frames['control_frame'], textvariable=shark_energy_gain_value, width=30)
-        shark_energy_gain_input.grid(row=7, column=1)
-
-        shark_starting_population_label = Label(self.frames['control_frame'], text="Shark starting population:")
-        shark_starting_population_label.grid(row=8, column=0)
-        shark_starting_population_value = IntVar()
-        shark_starting_population_value.set(simulation_parameters['shark_starting_population'])
-        shark_starting_population_input = Entry(self.frames['control_frame'], textvariable=shark_starting_population_value, width=30)
-        shark_starting_population_input.grid(row=8, column=1)
-
-        fish_starting_population_label = Label(self.frames['control_frame'], text="Fish starting population:")
-        fish_starting_population_label.grid(row=9, column=0)
-        fish_starting_population_value = IntVar()
-        fish_starting_population_value.set(simulation_parameters['fish_starting_population'])
-        fish_starting_population_input = Entry(self.frames['control_frame'], textvariable=fish_starting_population_value, width=30)
-        fish_starting_population_input.grid(row=9, column=1)
-
-        chronon_duration_label = Label(self.frames['control_frame'], text="Chronon duration (in ms):")
-        chronon_duration_label.grid(row=10, column=0)
-        chronon_duration_value = IntVar()
-        chronon_duration_value.set(simulation_parameters['chronon_duration'])
-        chronon_duration_input = Entry(self.frames['control_frame'], textvariable=chronon_duration_value, width=30)
-        chronon_duration_input.grid(row=10, column=1)
-
-        self.start_button = Button(self.frames['control_frame'], text="Start", command=lambda:SimulationControl.start_simulation(
-            self,
-            grid_height_value,
-            grid_width_value,
-            simulation_length_value,
-            fish_reproduction_time_value,
-            shark_reproduction_time_value,
-            shark_starvation_time_value,
-            shark_starting_energy_value,
-            shark_energy_gain_value,
-            shark_starting_population_value,
-            fish_starting_population_value,
-            chronon_duration_value
-        ))
-        self.start_button.grid(row=11, column=0)
-
-        self.pause_button = Button(self.frames['control_frame'], text="Pause", command=lambda:SimulationControl.pause_simulation(self))
-        self.pause_button.grid(row=11, column=1)
-
-        self.stop_button = Button(self.frames['control_frame'], text="Stop", command=lambda:SimulationControl.stop_simulation(self))
-        self.stop_button.grid(row=11, column=2)
+        self.canvas.config(width=canvas_width, height=canvas_height)
+        self.canvas.update_idletasks()
 
     def draw_canvas(self):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
@@ -192,7 +155,8 @@ class Interface:
         self.canvas = canvas
 
     def draw_alerts(self):
-        pass
+        self.alert_label = Label(self.frames['control_frame'], text="", bg="pink")
+        self.alert_label.grid(row=12, column=0, columnspan=3)
 
     def draw_wator(self, grid):
 
@@ -232,3 +196,98 @@ class Interface:
                     img = self.images.get(cell, self.images["empty"])
                     self.canvas.itemconfig(cell, image=img)
                     self.pause_button.config(text="Pause")
+
+    def check_parameters(self):
+
+        valid = True
+        self.alert_label['text'] = ""
+
+        try:
+            if self.grid_height_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une grid height valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une grid height valide"
+
+        try:
+            if self.grid_width_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une grid width valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une grid width valide"
+
+        try:
+            if self.fish_starting_population_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une fish_starting_population_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une fish_starting_population_value valide"
+
+        try:
+            if self.fish_reproduction_time_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une fish_reproduction_time_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une fish_reproduction_time_value valide"
+
+        try:
+            if self.shark_starting_population_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une shark_starting_population_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une shark_starting_population_value valide"
+
+        try:
+            if self.shark_reproduction_time_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une shark_reproduction_time_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une shark_reproduction_time_value valide"
+
+        try:
+            if self.shark_starting_energy_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une shark_starting_energy_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une shark_starting_energy_value valide"
+
+        try:
+            if self.shark_starvation_time_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une shark_starvation_time_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une shark_starvation_time_value valide"
+
+        try:
+            if self.simulation_length_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une simulation_length_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une simulation_length_value valide"
+
+        try:
+            if self.chronon_duration_value.get() == 0:
+                valid = False
+                self.alert_label['text']+="\nEntrez une chronon_duration_value valide"
+        except TclError:
+            valid = False
+            self.alert_label['text']+="\nEntrez une chronon_duration_value valide"
+
+        try:
+            if self.fish_starting_population_value.get() + self.shark_starting_population_value.get() > self.grid_height_value.get() * self.grid_width_value.get():
+                valid = False
+                self.alert_label['text'] += "\nToo many fishes for grid size"
+        except TclError:
+            valid = False
+
+        if valid:
+            SimulationControl.start_simulation(self)

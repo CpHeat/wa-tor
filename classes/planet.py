@@ -94,7 +94,7 @@ class Planet:
         self.entities.append(entity)
         
     def move_eat_entity(self, choice, entity):
-        self.move_entity(choice[0])
+        self.move_entity(choice[0], entity)
         #entity.eat()
         self.num_fish -=1
         
