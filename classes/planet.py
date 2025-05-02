@@ -60,7 +60,7 @@ class Planet:
         return self.grid
 
     def check_entities(self):
-        print("self.entities", self.check_counter)
+        print("self.entities", self.entities)
         self.next_entities = []
         self.check_counter += 1
 
@@ -70,6 +70,7 @@ class Planet:
         self.dead_fishes_age = 0
         self.dead_sharks_age = 0
         for entity in self.entities:
+            print("entity:", entity)
             possibilities_from_neighbors = self.get_neighbors(entity.x, entity.y)
             coordinates_possibilities_from_neighbors = self.get_neighbors_coordinates(entity.x, entity.y)
 
@@ -83,6 +84,7 @@ class Planet:
             # choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
             choice = entity.move(possibilities_from_neighbors)
 
+            print("choice:", choice)
             len_choice = len(choice)
             match len_choice:
                 case 2 | 1:  # check if move and reproduce entity is possible
@@ -95,7 +97,10 @@ class Planet:
                             self.move_and_reproduce_entity(choice[0], choice[1], entity)
                         elif len_choice == 1:  # move (only) entity, eat (for shark)
                             self.move_eat_entity(choice[0], entity)
+                    else:
+                        print("NOT IN CHOICE")
                 case _:  # nothing to do
+                    print("nothing to do")
                     self.grid[entity.y][entity.x] = None
                     if isinstance(entity, Fish):
                         self.dead_fishes_age += entity.age
@@ -115,7 +120,7 @@ class Planet:
                             self.next_entities.remove(entity)
                         self.count_shark -= 1
 
-        # self.validate_entities()
+        print("next entities:", self.next_entities)
         self.entities = self.next_entities
         return {'grid': self.grid, 'entities': self.entities, 'fishes_eaten': self.count_eaten_fish,
                 'nb_fish': self.count_fish, 'nb_shark': self.count_shark,
@@ -163,11 +168,13 @@ class Planet:
         new_x = x - 1 if x != 0 else self.width - 1
         neighbors_coordinates.append((new_x, y))  # W
 
+        neighbors_coordinates.append((x, y))
+
         return neighbors_coordinates
 
     def move_entity(self, target_pos_dict, entity):
-        print("current position", entity.x, entity.y)
-        print("target position", target_pos_dict)
+
+        print("move:", entity)
         target_x = target_pos_dict.get('x')
         target_y = target_pos_dict.get('y')
         old_x = entity.x
@@ -180,7 +187,8 @@ class Planet:
 
     # to test
     def move_eat_entity(self, target_pos_dict, entity):
-        print("move eat")
+
+        print("move eat:", entity)
         target_x = target_pos_dict.get('x')
         target_y = target_pos_dict.get('y')
         if isinstance(entity, Shark):
@@ -188,6 +196,7 @@ class Planet:
             if isinstance(self.grid[target_y][target_x], Fish):
                 entity.eat()
                 victim = self.grid[target_y][target_x]
+                print(f"la victime est {victim} position x: {target_x} y: {target_y}")
                 if victim in self.entities:
                     self.entities.remove(victim)
                     if victim in self.next_entities:
@@ -211,6 +220,7 @@ class Planet:
         baby_fish = Fish(old_x, old_y)
         self.grid[old_y][old_x] = baby_fish
         self.next_entities.append(baby_fish)
+        print("reproduce:", baby_fish)
         self.count_reproduced_fish += 1
         self.count_fish += 1
 
@@ -220,14 +230,17 @@ class Planet:
         baby_shark = Shark(old_x, old_y)
         self.grid[old_y][old_x] = baby_shark
         self.next_entities.append(baby_shark)
+
+        print("reproduce:", baby_shark)
         self.count_reproduced_shark += 1
         self.count_shark += 1
 
     def move_and_reproduce_entity(self, target_pos_dict, old_pos_dict, entity):
+
+        print("move reproduce:", entity)
         target_x = target_pos_dict.get('x')
         target_y = target_pos_dict.get('y')
 
-        print("reproduce")
         if isinstance(entity, Shark):  # case shark
             # to move shark
             # check target cell
