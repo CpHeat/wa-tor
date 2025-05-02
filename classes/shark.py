@@ -21,6 +21,7 @@ class Shark(Animal):
 
 
     def move(self, list):
+        self.age += 1
         old_position = {"x": self.x, "y": self.y}
         verif = {"N": list[0] , "S": list[1], "E": list[2], "W": list[3]}
         direction = []
@@ -47,12 +48,14 @@ class Shark(Animal):
             list_result.append(new_position)
 
         if(self.reproduce(new_position , old_position) == True):
+            self.children_number +=1
             list_result.append(old_position)
 
         return list_result if self.shark_starting_energy_left > 0 else []
     
     def eat(self):
         self.shark_starvation_left = self.shark_starvation_time
+        self.fish_eaten += 1
 
     def lost_life(self):
         if(self.shark_starvation_left > 0):
