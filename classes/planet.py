@@ -46,24 +46,24 @@ class Planet:
         for i in random_indices_shark:
             y = i // self.width #y
             x = i % self.width #x
-            S = Shark(x,y)
+            new_shark = Shark(x,y)
             if self.follow_shark:
-                Shark.followed = True
+                new_shark.followed = True
                 self.follow_shark = False
-            self.grid[y][x] = S 
-            self.entities.append(S)
+            self.grid[y][x] = new_shark 
+            self.entities.append(new_shark)
         
         random_indices_fish = list(set(random_indices)- set(random_indices_shark))
         
         for i in random_indices_fish:
             y = i // self.width #y
             x = i % self.width #x
-            F = Fish(x,y)
+            new_fish = Fish(x,y)
             if self.follow_shark:
-                Fish.followed = True
+                new_fish.followed = True
                 self.follow_fish = False
-            self.grid[y][x] = F
-            self.entities.append(F)
+            self.grid[y][x] = new_fish
+            self.entities.append(new_fish)
            
     
     def get_grid(self):
