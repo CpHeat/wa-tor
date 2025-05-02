@@ -51,7 +51,6 @@ class Shark(Animal):
             self.children_number +=1
             list_result.append(old_position)
 
-        print("result", list_result)
         return list_result if self.shark_starting_energy_left > 0 else []
     
     def eat(self):
