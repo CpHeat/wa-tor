@@ -22,7 +22,7 @@ class Planet:
         '''
         self.height = 3#simulation_parameters.get('grid_height')
         self.width =  3 #simulation_parameters.get('grid_width')
-        self.num_fish = self.count_fish = 1#simulation_parameters.get('fish_starting_')    
+        self.num_fish = self.count_fish = 1#simulation_parameters.get('fish_starting_population')    
         self.num_shark = self.count_shark = 1# simulation_parameters.get('shark_starting_population')
         self.count_eaten_fish = self.count_shark_eats = 0
 
