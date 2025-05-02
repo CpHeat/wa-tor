@@ -246,7 +246,7 @@ class Planet:
                         elif len_choice == 1: # move (only) entity, eat (for shark)
                             self.move_eat_entity(choice[0], entity)
                             
-
+                            
                     else:
                         print("invalid choices")
                 case _:  # nothing to do
