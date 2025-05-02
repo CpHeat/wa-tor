@@ -51,7 +51,7 @@ class SimulationControl:
             interface.draw_wator(grid)
             cls._i += 1
             if cls._i < simulation_parameters['simulation_duration']-1:
-            interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
+                interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
 
     @classmethod
     def pause_simulation(cls, interface):

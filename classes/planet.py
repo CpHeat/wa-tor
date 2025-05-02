@@ -19,7 +19,7 @@ class Shark:
 
 
 class Planet:
-    def __init__(self):
+    def __init__(self, follow_entities):
         '''Initialize empty grid
         '''
         self.follow_fish = follow_entities
