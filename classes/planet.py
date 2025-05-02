@@ -34,6 +34,7 @@ class Planet:
         self.dead_sharks_age = 0
 
         self.entities = []
+        self.entites_checked = []
         self.populate()
 
     def populate(self):
@@ -113,22 +114,26 @@ class Planet:
     def move_entity(self, target_pos_dict, entity):
         target_x = target_pos_dict.get('x')
         target_y = target_pos_dict.get('y')
-        print("entity to move", entity)
-        print("entity x", entity.x, "entity y", entity.y)
+        print("entity to move", entity, "entity x", entity.x, "entity y", entity.y)
+        print("move:before entities",self.entities)
         print("target_pos_dict:", target_pos_dict)
+        print("target cell before", self.grid[target_y][target_x])
         old_x = entity.x
         old_y = entity.y
         entity.x = target_x
         entity.y = target_y
         print("old cell before", self.grid[old_y][old_x])
-        print("moveeeeeeeeeeeee before")
+        
         print(self.grid)
         self.grid[target_y][target_x] = entity
         self.grid[old_y][old_x] = None
         print("old cell after", self.grid[old_y][old_x])
-        print("moveeeeeeeeeeeee after")
-        print(self.grid)
+        print("target cell after", self.grid[target_y][target_x])
+        
+        
         self.entities.append(entity)
+        print("grid after",self.grid)
+        print("move:after entities",self.entities)
 
     
     # to test    
@@ -139,6 +144,7 @@ class Planet:
             # eat first
             if isinstance(self.grid[target_y][target_x],Fish):
                 entity.eat()
+                self.entites_checked.append(self.grid[target_y][target_x])
                 
                 self.count_shark_eats +=1
                 self.count_eaten_fish +=1
@@ -154,13 +160,14 @@ class Planet:
     def reproduce_fish(self,old_pos_dict):
         old_x = old_pos_dict.get('x')
         old_y = old_pos_dict.get('y')
-        print("grid for rep fish")
+        print("grid for rep fish", self.grid)
         baby_fish = Fish(old_x, old_y)
         self.grid[old_y][old_x] = baby_fish
-        print("after grid for rep fish")
+        
         self.entities.append(baby_fish)
         self.count_reproduced_fish += 1
         self.count_fish += 1
+        print("after grid for rep fish", self.grid)
 
     def reproduce_shark(self, old_pos_dict):
         old_x = old_pos_dict.get('x')
@@ -203,61 +210,73 @@ class Planet:
     def check_entities(self):
         entity_copy = self.entities.copy()
         self.entities = []
+        self.entites_checked = []
 
         # Reset to zero on each call — statistics for each round
         self.count_eaten_fish = self.count_shark_eats = 0
         self.count_reproduced_fish = self.count_reproduced_shark = 0 
         self.dead_fishes_age = 0
         self.dead_sharks_age = 0
+        print("check_entities: old grid:",self.grid)
         for entity in entity_copy :
-            print(f"check this entity.x: {entity.x}, entity.y: {entity.y}" )
-            possibilities_from_neighbors = self.get_neighbors(entity.x,entity.y)
-            coordinates_possibilities_from_neighbors = self.get_neighbors_coordinates(entity.x,entity.y)
+            if entity not in self.entites_checked:
+            
+                print(f"check this entity {entity} entity.x: {entity.x}, entity.y: {entity.y}" )
+                possibilities_from_neighbors = self.get_neighbors(entity.x,entity.y)
+                coordinates_possibilities_from_neighbors = self.get_neighbors_coordinates(entity.x,entity.y)
             
                 
 
 
-            print("possibilities_from_neighbors:", possibilities_from_neighbors)
-            print("coordinates_possibilities_from_neighbors:", coordinates_possibilities_from_neighbors)
-            print("before calling move entity x", entity.x, "entity y", entity.y)
-            ################# case move no rep
-            # selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
-            # choice = [{'x': selected_x, 'y': selected_y}]
-            # selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
-            # choice = [{'x': selected_x, 'y': selected_y}]
-            ################# case move & rep
-            # selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
-            # choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
-            choice = entity.move(possibilities_from_neighbors)
+                #print("possibilities_from_neighbors:", possibilities_from_neighbors)
+                print("coordinates_possibilities_from_neighbors:", coordinates_possibilities_from_neighbors)
+                #print("before calling move entity x", entity.x, "entity y", entity.y)
+                ################# case move no rep
+                # selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+                # choice = [{'x': selected_x, 'y': selected_y}]
+                # selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+                # choice = [{'x': selected_x, 'y': selected_y}]
+                ################# case move & rep
+                # selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+                # choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
+                choice = entity.move(possibilities_from_neighbors)
+                self.entites_checked.append(entity)
+                #print("after calling move entity x", entity.x, "entity y", entity.y)
+                print("choice:", choice)
+                len_choice = len(choice)
+                match len_choice:
+                    case 2 | 1:  # check if move and reproduce entity is possible
 
-            print("after calling move entity x", entity.x, "entity y", entity.y)
-            print("choice:", choice)
-            len_choice = len(choice)
-            match len_choice:
-                case 2 | 1:  # check if move and reproduce entity is possible
+                        target_x = choice[0].get('x')
+                        target_y = choice[0].get('y')
 
-                    target_x = choice[0].get('x')
-                    target_y = choice[0].get('y')
-
-                    if (target_x,target_y) in coordinates_possibilities_from_neighbors:
-                        print(f"ok to move & rep | to move no rep entity at row: {entity.y} col: {entity.x} to target row:{target_y} col:{target_x}")
-                        if len_choice == 2: # move and reproduce entity
-                            self.move_and_reproduce_entity(choice[0],choice[1],entity)
-                        elif len_choice == 1: # move (only) entity, eat (for shark)
-                            self.move_eat_entity(choice[0], entity)
+                        if (target_x,target_y) in coordinates_possibilities_from_neighbors:
+                        
+                        
+                            if len_choice == 2: # move and reproduce entity
+                                print(" move and reproduce entity ")
+                                self.move_and_reproduce_entity(choice[0],choice[1],entity)
                             
-                            
-                    else:
-                        print("invalid choices")
-                case _:  # nothing to do
-                    print("no move")
-                    if isinstance(entity, Fish):
-                        self.dead_fishes_age += entity.age
-                    elif isinstance(entity, Shark): # dead shark
-                        self.dead_sharks_age += entity.age
-                        self.grid[entity.y][entity.x] = None
-                        self.count_shark -= 1
-                    
+                            elif len_choice == 1: # move (only) entity, eat (for shark)
+                                print(" move (only) entity, eat (for shark) ")
+                                oldx = entity.x
+                                oldy = entity.y
+                                self.move_eat_entity(choice[0], entity)     
+       
+                        else:
+                            print("invalid choices")
+                    case _:  # nothing to do
+                        print("no move")
+                        if isinstance(entity, Fish):
+                            self.dead_fishes_age += entity.age
+                        elif isinstance(entity, Shark): # dead shark
+                            self.dead_sharks_age += entity.age
+                            self.grid[entity.y][entity.x] = None
+                            self.count_shark -= 1
+            else:
+                print( "entity already treated")
+        print("check_entities: new grid:",self.grid)
+
  
         return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish, 'dead_fishes_age':self.dead_fishes_age, 'dead_sharks_age':self.dead_sharks_age}       
         

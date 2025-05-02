@@ -13,10 +13,7 @@ class Animal:
         self.children_number = 0
 
     def choice_direction(self, choice_list):
-        print(f"x:{self.y}, x:{self.y}")
-        print(choice_list)
-        print(simulation_parameters["grid_height"])
-        print(simulation_parameters["grid_width"])
+        
         x = self.x
         y = self.y
         match(random.choice(choice_list)):
@@ -43,7 +40,7 @@ class Animal:
                     else :
                         x = self.x + 1
 
-        print(f"x: {x}, y: {y}")
+        
         return [{"x": x, "y": y}]
     
     def reproduce(self, new_position, old_position):
