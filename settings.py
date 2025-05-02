@@ -21,3 +21,9 @@ simulation_parameters = {
 
 # Cell size (in px)
 CELL_SIZE = 50
+
+DB_NAME = ""
+DB_USER = "admin"
+DB_PASSWORD = "admin"
+DB_HOST = "localhost"
+DB_PORT = "5432"
