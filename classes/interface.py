@@ -1,3 +1,4 @@
+import copy
 from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError, Checkbutton, \
     BooleanVar, DoubleVar
 
@@ -18,6 +19,7 @@ class Interface:
 
         self.images = {}
         self.image_ids = []
+        self.grids = []
 
         self.fish_nb_counter = None
         self.shark_nb_counter = None
@@ -39,6 +41,9 @@ class Interface:
         self.start_button = None
         self.pause_button = None
         self.stop_button = None
+        self.previous_button = None
+        self.next_button = None
+        self.throwback_chronon_label = None
 
         self.alert_label = None
 
@@ -81,9 +86,17 @@ class Interface:
         fish_image = fish_image.resize((CELL_SIZE, CELL_SIZE))
         fish_image = ImageTk.PhotoImage(fish_image)
 
+        followed_fish_image = Image.open("resources/followed_fish.png")
+        followed_fish_image = followed_fish_image.resize((CELL_SIZE, CELL_SIZE))
+        followed_fish_image = ImageTk.PhotoImage(followed_fish_image)
+
         shark_image = Image.open("resources/shark.png")
         shark_image = shark_image.resize((CELL_SIZE, CELL_SIZE))
         shark_image = ImageTk.PhotoImage(shark_image)
+
+        followed_shark_image = Image.open("resources/followed_shark.png")
+        followed_shark_image = followed_shark_image.resize((CELL_SIZE, CELL_SIZE))
+        followed_shark_image = ImageTk.PhotoImage(followed_shark_image)
 
         empty_image = Image.open("resources/empty.png")
         empty_image = empty_image.resize((CELL_SIZE, CELL_SIZE))
@@ -91,7 +104,9 @@ class Interface:
 
         self.images = {
             'fish': fish_image,
+            'followed_fish': followed_fish_image,
             'shark': shark_image,
+            'followed_shark': followed_shark_image,
             'empty': empty_image
         }
 
@@ -143,12 +158,20 @@ class Interface:
 
         self.start_button = Button(self.frames['control_buttons_frame'], text="Start", command=lambda:self.check_parameters())
         self.start_button.grid(row=0, column=0)
-
         self.pause_button = Button(self.frames['control_buttons_frame'], text="Pause", command=lambda:SimulationControl.pause_simulation(self))
-        self.pause_button.grid(row=0, column=1)
-
+        self.pause_button.grid(row=0, column=2)
         self.stop_button = Button(self.frames['control_buttons_frame'], text="Stop", command=lambda:SimulationControl.stop_simulation(self))
-        self.stop_button.grid(row=0, column=2)
+        self.stop_button.grid(row=0, column=4)
+
+
+        self.previous_button = Button(self.frames['control_buttons_frame'], text="Previous", command=lambda:self.draw_wator(self.grids[SimulationControl.throwback_chronon], throwback="previous"))
+        self.previous_button.grid(row=1, column=0)
+        self.throwback_chronon_label = Label(self.frames['control_buttons_frame'], text=SimulationControl.throwback_chronon)
+        self.throwback_chronon_label.grid(row=1, column=2)
+        self.next_button = Button(self.frames['control_buttons_frame'], text="Next", command=lambda:self.draw_wator(self.grids[SimulationControl.throwback_chronon], throwback="next"))
+        self.next_button.grid(row=1, column=4)
+
+        self.start_button.grid(row=0, column=0)
 
     def update_canvas(self):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
@@ -169,7 +192,20 @@ class Interface:
         self.alert_label = Label(self.frames['control_frame'], text="", bg="pink")
         self.alert_label.grid(row=12, column=0, columnspan=3)
 
-    def draw_wator(self, grid):
+    def draw_wator(self, grid, throwback = None):
+
+        if not throwback:
+            self.grids.append(copy.deepcopy(grid))
+        else:
+            if throwback == "previous":
+                if SimulationControl.throwback_chronon > 0:
+                    SimulationControl.throwback_chronon -= 1
+                grid = self.grids[SimulationControl.throwback_chronon]
+            elif throwback == "next" and SimulationControl.throwback_chronon < SimulationControl.current_chronon:
+                if SimulationControl.throwback_chronon < SimulationControl.current_chronon:
+                    SimulationControl.throwback_chronon += 1
+                grid = self.grids[SimulationControl.throwback_chronon]
+            self.throwback_chronon_label['text'] = SimulationControl.throwback_chronon
 
         if not self.image_ids:
             self.image_ids = []
@@ -178,9 +214,15 @@ class Interface:
                 row_ids = []
                 for y, cell in enumerate(row):
                     if isinstance(cell, Fish):
-                        img = self.images.get(cell, self.images["fish"])
+                        if cell.followed:
+                            img = self.images.get(cell, self.images["followed_fish"])
+                        else:
+                            img = self.images.get(cell, self.images["fish"])
                     elif isinstance(cell, Shark):
-                        img = self.images.get(cell, self.images["shark"])
+                        if cell.followed:
+                            img = self.images.get(cell, self.images["followed_shark"])
+                        else:
+                            img = self.images.get(cell, self.images["shark"])
                     else:
                         img = self.images.get(cell, self.images["empty"])
 
@@ -193,9 +235,15 @@ class Interface:
             for x, row in enumerate(grid):
                 for y, cell in enumerate(row):
                     if isinstance(cell, Fish):
-                        img = self.images.get(cell, self.images["fish"])
+                        if cell.followed:
+                            img = self.images.get(cell, self.images["followed_fish"])
+                        else:
+                            img = self.images.get(cell, self.images["fish"])
                     elif isinstance(cell, Shark):
-                        img = self.images.get(cell, self.images["shark"])
+                        if cell.followed:
+                            img = self.images.get(cell, self.images["followed_shark"])
+                        else:
+                            img = self.images.get(cell, self.images["shark"])
                     else:
                         img = self.images.get(cell, self.images["empty"])
                     self.canvas.itemconfig(self.image_ids[x][y], image=img)
@@ -204,6 +252,7 @@ class Interface:
         """
         Resets the canvas.
         """
+        self.grids = []
         if self.image_ids:
             for row in self.image_ids:
                 for cell in row:

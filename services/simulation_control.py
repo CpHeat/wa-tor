@@ -7,7 +7,8 @@ from settings import simulation_parameters
 
 
 class SimulationControl:
-    _i = 1
+    current_chronon = 0
+    throwback_chronon = 0
     _simulation_status = "playing"
     _simulation_duration = simulation_parameters['simulation_duration']
     _planet = None
@@ -33,24 +34,32 @@ class SimulationControl:
         cls.set_parameters(interface)
 
         interface.update_canvas()
+
         cls.planet = Planet(interface.follow_entities)
         cls._simulation_status = "playing"
-        cls._i = 1
-        cls.simulation_step(interface)
+        cls.current_chronon = cls.throwback_chronon = 0
+
+        interface.draw_wator(cls.planet.grid)
+        interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
 
     @classmethod
     def simulation_step(cls, interface):
-        if cls._simulation_status == "playing" and cls._i <= simulation_parameters['simulation_duration']:
+        if cls._simulation_status == "playing" and cls.current_chronon <= simulation_parameters['simulation_duration']:
 
             wator_status = cls.planet.check_entities()
             grid = wator_status['grid']
-            interface.chronons_counter.config(text=cls._i)
+
+            cls.current_chronon += 1
+            cls.throwback_chronon = cls.current_chronon
+
+            interface.chronons_counter.config(text=cls.current_chronon)
             interface.fish_nb_counter.config(text=wator_status['nb_fish'])
             interface.shark_nb_counter.config(text=wator_status['nb_shark'])
+            interface.throwback_chronon_label['text'] = cls.throwback_chronon
 
             interface.draw_wator(grid)
-            cls._i += 1
-            if cls._i < simulation_parameters['simulation_duration']-1:
+
+            if cls.current_chronon < simulation_parameters['simulation_duration']-1:
                 interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
 
     @classmethod

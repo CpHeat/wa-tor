@@ -12,10 +12,14 @@ class Animal:
         self.followed = False
         self.children_number = 0
 
-    def choice_direction(self, list):
+    def choice_direction(self, choice_list):
+        print(f"x:{self.y}, x:{self.y}")
+        print(choice_list)
+        print(simulation_parameters["grid_height"])
+        print(simulation_parameters["grid_width"])
         x = self.x
         y = self.y
-        match(random.choice(list)):
+        match(random.choice(choice_list)):
                 case "N":
                     if(self.y == 0):
                         y = simulation_parameters["grid_height"] - 1
@@ -38,7 +42,8 @@ class Animal:
                         x = 0
                     else :
                         x = self.x + 1
-        
+
+        print(f"x: {x}, y: {y}")
         return [{"x": x, "y": y}]
     
     def reproduce(self, new_position, old_position):
