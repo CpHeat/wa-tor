@@ -214,10 +214,10 @@ class Planet:
             #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
             #choice = [{'x': selected_x, 'y': selected_y}]
             ################# case move & rep
-            selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
-            choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
+            #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+            #choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
             choice = entity.move(possibilities_from_neighbors)
-            choice = entity.move(possibilities_from_neighbors)
+            
             print("after calling move entity x",entity.x ,"entity y", entity.y )
             print("choice:", choice)
             len_choice = len(choice)
@@ -238,9 +238,9 @@ class Planet:
                 case _: # nothing to do
                     print("no move")
                     if isinstance(entity,Fish) :
-                        self.dead_fishes_age = entity.age
+                        self.dead_fishes_age += entity.age
                     elif isinstance(entity,Shark):
-                        self.dead = entity.age
+                        self.dead_sharks_age += entity.age
                     
  
         return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish, 'dead_fishes_age':self.dead_fishes_age, 'dead_sharks_age':self.dead_sharks_age}       
