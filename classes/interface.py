@@ -268,16 +268,16 @@ class Interface:
         valid = True
         self.alert_label['text'] = ""
 
-        valid = self.check_parameter(self.grid_height_value, "grid height", valid)
-        valid = self.check_parameter(self.grid_width_value, "grid width", valid)
-        valid = self.check_parameter(self.fish_starting_population_value, "fish starting population value", valid)
-        valid = self.check_parameter(self.fish_reproduction_time_value, "fish reproduction time value", valid)
-        valid = self.check_parameter(self.shark_starting_population_value, "shark starting population value", valid)
-        valid = self.check_parameter(self.shark_reproduction_time_value, "shark reproduction time value", valid)
-        valid = self.check_parameter(self.shark_starting_energy_value, "shark starting energy value", valid)
-        valid = self.check_parameter(self.shark_starvation_time_value, "shark starvation time value", valid)
-        valid = self.check_parameter(self.simulation_length_value, "simulation length value", valid)
-        valid = self.check_parameter(self.chronon_duration_value, "chronon duration value", valid)
+        valid = self.check_parameter(self.grid_height_value, "grid height", 2, valid)
+        valid = self.check_parameter(self.grid_width_value, "grid width", 2, valid)
+        valid = self.check_parameter(self.fish_starting_population_value, "fish starting population value", 1, valid)
+        valid = self.check_parameter(self.fish_reproduction_time_value, "fish reproduction time value", 1, valid)
+        valid = self.check_parameter(self.shark_starting_population_value, "shark starting population value", 0, valid)
+        valid = self.check_parameter(self.shark_reproduction_time_value, "shark reproduction time value", 0, valid)
+        valid = self.check_parameter(self.shark_starting_energy_value, "shark starting energy value", 1, valid)
+        valid = self.check_parameter(self.shark_starvation_time_value, "shark starvation time value",0, valid)
+        valid = self.check_parameter(self.simulation_length_value, "simulation length value", 1, valid)
+        valid = self.check_parameter(self.chronon_duration_value, "chronon duration value", 0, valid)
 
         try:
             if self.fish_starting_population_value.get() + self.shark_starting_population_value.get() > self.grid_height_value.get() * self.grid_width_value.get():
@@ -289,7 +289,7 @@ class Interface:
         if valid:
             SimulationControl.start_simulation(self)
 
-    def check_parameter(self, parameter: DoubleVar, parameter_name: str, valid: bool) -> bool:
+    def check_parameter(self, parameter: DoubleVar, parameter_name: str, min_value, valid: bool) -> bool:
         """
         Checks if a DoubleVar input is valid.
 
@@ -303,13 +303,13 @@ class Interface:
         """
         try:
             value = int(parameter.get() // 1)
-            if value == 0 :
+            if value < min_value :
                 valid = False
-                self.alert_label['text']+=f"\nEnter a valid {parameter_name}"
+                self.alert_label['text']+=f"\nEnter a valid {parameter_name} (> {min_value})"
             else:
                 parameter.set(value)
         except TclError:
             valid = False
-            self.alert_label['text']+=f"\nEnter a valid {parameter_name}"
+            self.alert_label['text']+=f"\nEnter a valid {parameter_name} (> {min_value})"
 
         return valid
