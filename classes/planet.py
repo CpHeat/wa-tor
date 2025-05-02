@@ -24,10 +24,10 @@ class Planet:
         '''
         self.height = 3#simulation_parameters.get('grid_height')
         self.width =  3 #simulation_parameters.get('grid_width')
-        self.num_fish = 0#simulation_parameters.get('fish_reproduction_time')    
-        self.num_shark = 1# simulation_parameters.get('shark_starting_population')
+        self.num_fish = self.count_fish = 1#simulation_parameters.get('fish_reproduction_time')    
+        self.num_shark = self.count_shark = 1# simulation_parameters.get('shark_starting_population')
         self.count_eaten_fish = self.count_shark_eats = 0
-        self.count_fish = self.count_shark = 0
+
         self.count_reproduced_fish = self.count_reproduced_shark = 0 
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         self.follow_fish = follow_entities
@@ -247,7 +247,7 @@ class Planet:
                         if len_choice == 2: # move and reproduce entity
                             self.move_and_reproduce_entity(choice[0],choice[1],entity)
                         elif len_choice == 1: # move (only) entity, eat (for shark)
-                            self.move_eat_entity(choice, entity)
+                            self.move_eat_entity(choice[0], entity)
                             
                             
                     else:
@@ -258,6 +258,7 @@ class Planet:
                         self.dead_fishes_age += entity.age
                     elif isinstance(entity,Shark):
                         self.dead_sharks_age += entity.age
+                        self.count_shark -=1
                     
  
         return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish, 'dead_fishes_age':self.dead_fishes_age, 'dead_sharks_age':self.dead_sharks_age}       
