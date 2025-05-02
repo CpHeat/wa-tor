@@ -22,7 +22,7 @@ class Planet:
         '''
         self.height = 3#simulation_parameters.get('grid_height')
         self.width =  3 #simulation_parameters.get('grid_width')
-        self.num_fish = self.count_fish = 1#simulation_parameters.get('fish_reproduction_time')    
+        self.num_fish = self.count_fish = 1#simulation_parameters.get('fish_starting_')    
         self.num_shark = self.count_shark = 1# simulation_parameters.get('shark_starting_population')
         self.count_eaten_fish = self.count_shark_eats = 0
 
@@ -139,6 +139,7 @@ class Planet:
             # eat first
             if isinstance(self.grid[target_y][target_x],Fish):
                 entity.eat()
+                
                 self.count_shark_eats +=1
                 self.count_eaten_fish +=1
             # then move
@@ -205,7 +206,6 @@ class Planet:
 
         # Reset to zero on each call — statistics for each round
         self.count_eaten_fish = self.count_shark_eats = 0
-        self.count_fish = self.count_shark = 0
         self.count_reproduced_fish = self.count_reproduced_shark = 0 
         self.dead_fishes_age = 0
         self.dead_sharks_age = 0
@@ -253,9 +253,10 @@ class Planet:
                     print("no move")
                     if isinstance(entity, Fish):
                         self.dead_fishes_age += entity.age
-                    elif isinstance(entity, Shark):
+                    elif isinstance(entity, Shark): # dead shark
                         self.dead_sharks_age += entity.age
-                        self.count_shark -=1
+                        self.grid[entity.y][entity.x] = None
+                        self.count_shark -= 1
                     
  
         return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish, 'dead_fishes_age':self.dead_fishes_age, 'dead_sharks_age':self.dead_sharks_age}       
