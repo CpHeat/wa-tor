@@ -1,4 +1,5 @@
-from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError
+from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError, Checkbutton, \
+    BooleanVar, DoubleVar
 
 from PIL import Image, ImageTk
 
@@ -18,6 +19,10 @@ class Interface:
         self.images = {}
         self.image_ids = []
 
+        self.fish_nb_counter = None
+        self.shark_nb_counter = None
+        self.chronons_counter = None
+
         self.grid_height_value = None
         self.grid_width_value = None
         self.simulation_length_value = None
@@ -28,6 +33,8 @@ class Interface:
         self.shark_starting_population_value = None
         self.fish_starting_population_value = None
         self.chronon_duration_value = None
+
+        self.follow_entities = False
 
         self.start_button = None
         self.pause_button = None
@@ -60,7 +67,7 @@ class Interface:
         control_frame.grid(row=1, column=1)
         self.frames['control_frame'] = control_frame
         control_buttons_frame = Frame(control_frame, bg="black")
-        control_buttons_frame.grid(row=10, column=0, columnspan=3)
+        control_buttons_frame.grid(row=11, column=0, columnspan=3)
         self.frames['control_buttons_frame'] = control_buttons_frame
         history_frame = Frame(main_frame, bg="red")
         history_frame.grid(row=2, column=0, columnspan=2)
@@ -92,25 +99,25 @@ class Interface:
 
         fish_label = Label(self.frames['counter_frame'], text="Fishes:", bg="yellow")
         fish_label.grid(row=0, column=0)
-        fish_nb = Label(self.frames['counter_frame'], text="12", bg="yellow")
-        fish_nb.grid(row=0, column=1)
+        self.fish_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.fish_nb_counter.grid(row=0, column=1)
 
         shark_label = Label(self.frames['counter_frame'], text="Sharks:", bg="yellow")
         shark_label.grid(row=0, column=2)
-        shark_nb = Label(self.frames['counter_frame'], text="15", bg="yellow")
-        shark_nb.grid(row=0, column=3)
+        self.shark_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.shark_nb_counter.grid(row=0, column=3)
 
         chronons_label = Label(self.frames['counter_frame'], text="Chronons:", bg="yellow")
         chronons_label.grid(row=0, column=4)
-        chronons_nb = Label(self.frames['counter_frame'], text="8", bg="yellow")
-        chronons_nb.grid(row=0, column=5)
+        self.chronons_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.chronons_counter.grid(row=0, column=5)
 
     @classmethod
     def input_component(cls, frame, text, default_value, row):
 
         component_label = Label(frame, text=text)
         component_label.grid(row=row, column=0)
-        component_value = IntVar()
+        component_value = DoubleVar()
         component_value.set(default_value)
         component_input = Entry(frame, textvariable=component_value, width=30)
         component_input.grid(row=row, column=1)
@@ -129,6 +136,10 @@ class Interface:
         self.shark_starvation_time_value = self.input_component(self.frames['control_frame'], "Shark starvation time:", simulation_parameters['shark_starvation_time'], 7)
         self.simulation_length_value = self.input_component(self.frames['control_frame'], "Simulation duration:", simulation_parameters['simulation_duration'], 8)
         self.chronon_duration_value = self.input_component(self.frames['control_frame'], "Chronon duration (in ms):", simulation_parameters['chronon_duration'], 9)
+
+        check_value = BooleanVar(value=False)
+        follow_entities_checkbox = Checkbutton(self.frames['control_frame'], text='Follow entities',variable=check_value, onvalue=True, offvalue=False, command=lambda: setattr(self, 'follow_entities', check_value.get()))
+        follow_entities_checkbox.grid(row=10, column=0)
 
         self.start_button = Button(self.frames['control_buttons_frame'], text="Start", command=lambda:self.check_parameters())
         self.start_button.grid(row=0, column=0)
@@ -189,7 +200,10 @@ class Interface:
                         img = self.images.get(cell, self.images["empty"])
                     self.canvas.itemconfig(self.image_ids[x][y], image=img)
 
-    def reset_interface(self):
+    def reset_canvas(self):
+        """
+        Resets the canvas.
+        """
         if self.image_ids:
             for row in self.image_ids:
                 for cell in row:
@@ -197,90 +211,24 @@ class Interface:
                     self.canvas.itemconfig(cell, image=img)
                     self.pause_button.config(text="Pause")
 
-    def check_parameters(self):
+    def check_parameters(self) -> None:
+        """
+        Checks if all inputs are valid.
+        """
 
         valid = True
         self.alert_label['text'] = ""
 
-        try:
-            if self.grid_height_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une grid height valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une grid height valide"
-
-        try:
-            if self.grid_width_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une grid width valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une grid width valide"
-
-        try:
-            if self.fish_starting_population_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une fish_starting_population_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une fish_starting_population_value valide"
-
-        try:
-            if self.fish_reproduction_time_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une fish_reproduction_time_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une fish_reproduction_time_value valide"
-
-        try:
-            if self.shark_starting_population_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une shark_starting_population_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une shark_starting_population_value valide"
-
-        try:
-            if self.shark_reproduction_time_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une shark_reproduction_time_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une shark_reproduction_time_value valide"
-
-        try:
-            if self.shark_starting_energy_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une shark_starting_energy_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une shark_starting_energy_value valide"
-
-        try:
-            if self.shark_starvation_time_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une shark_starvation_time_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une shark_starvation_time_value valide"
-
-        try:
-            if self.simulation_length_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une simulation_length_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une simulation_length_value valide"
-
-        try:
-            if self.chronon_duration_value.get() == 0:
-                valid = False
-                self.alert_label['text']+="\nEntrez une chronon_duration_value valide"
-        except TclError:
-            valid = False
-            self.alert_label['text']+="\nEntrez une chronon_duration_value valide"
+        valid = self.check_parameter(self.grid_height_value, "grid height", valid)
+        valid = self.check_parameter(self.grid_width_value, "grid width", valid)
+        valid = self.check_parameter(self.fish_starting_population_value, "fish starting population value", valid)
+        valid = self.check_parameter(self.fish_reproduction_time_value, "fish reproduction time value", valid)
+        valid = self.check_parameter(self.shark_starting_population_value, "shark starting population value", valid)
+        valid = self.check_parameter(self.shark_reproduction_time_value, "shark reproduction time value", valid)
+        valid = self.check_parameter(self.shark_starting_energy_value, "shark starting energy value", valid)
+        valid = self.check_parameter(self.shark_starvation_time_value, "shark starvation time value", valid)
+        valid = self.check_parameter(self.simulation_length_value, "simulation length value", valid)
+        valid = self.check_parameter(self.chronon_duration_value, "chronon duration value", valid)
 
         try:
             if self.fish_starting_population_value.get() + self.shark_starting_population_value.get() > self.grid_height_value.get() * self.grid_width_value.get():
@@ -291,3 +239,28 @@ class Interface:
 
         if valid:
             SimulationControl.start_simulation(self)
+
+    def check_parameter(self, parameter: DoubleVar, parameter_name: str, valid: bool) -> bool:
+        """
+        Checks if a DoubleVar input is valid.
+
+        Args:
+            parameter (DoubleVar): The input to check.
+            parameter_name (str): The name to show in alerts.
+            valid (bool): The previous state of valid.
+
+        Returns:
+            valid (boolean): The validity of the input.
+        """
+        try:
+            value = int(parameter.get() // 1)
+            if value == 0 :
+                valid = False
+                self.alert_label['text']+=f"\nEnter a valid {parameter_name}"
+            else:
+                parameter.set(value)
+        except TclError:
+            valid = False
+            self.alert_label['text']+=f"\nEnter a valid {parameter_name}"
+
+        return valid
