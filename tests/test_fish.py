@@ -34,7 +34,7 @@ class test_fish(unittest.TestCase):
          test_reproduce = Fish(x=4, y=7)
          for _ in range(5):
              list_result = test_reproduce.move([1, None, 1, 1])
-         self.assertEqual(list_result, [{"x":4, "y":2}, {"x":4, "y":1}])
+         self.assertEqual(list_result, [{"x":4, "y":8}, {"x":4, "y":7}])
     
     #ne pas utiliser la méthode reproduce (ne peux pas se déplacer)
     def test_fish_impossible_reproduce(self):

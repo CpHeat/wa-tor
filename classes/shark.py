@@ -1,7 +1,8 @@
 from settings import simulation_parameters
+from classes.animal import Animal
 from classes.fish import Fish
 
-class Shark(Fish):
+class Shark(Animal):
 
     def __init__(self,x:int, y:int):
         super().__init__(x, y)
@@ -15,6 +16,8 @@ class Shark(Fish):
         self.shark_starvation_left = self.shark_starvation_time
         self.shark_starting_energy_left = self.shark_starting_energy_time
         self.reproduction_left =  self.reproduction_time
+
+        self.fish_eaten = 0
 
 
     def move(self, list):
