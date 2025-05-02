@@ -22,7 +22,7 @@ class Planet:
         '''
         self.height = simulation_parameters.get('grid_height')
         self.width = simulation_parameters.get('grid_width')
-        self.num_fish = self.count_fish = simulation_parameters.get('fish_reproduction_time')
+        self.num_fish = self.count_fish = simulation_parameters.get('fish_starting_population')
         self.num_shark = self.count_shark = simulation_parameters.get('shark_starting_population')
         self.count_eaten_fish = self.count_shark_eats = 0
         self.count_reproduced_fish = self.count_reproduced_shark = 0
@@ -204,7 +204,7 @@ class Planet:
 
         # Reset to zero on each call — statistics for each round
         self.count_eaten_fish = self.count_shark_eats = 0
-        self.count_fish = self.count_shark = 0
+        
         self.count_reproduced_fish = self.count_reproduced_shark = 0 
         self.dead_fishes_age = 0
         self.dead_sharks_age = 0
