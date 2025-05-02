@@ -59,6 +59,9 @@ class Planet:
             y = i // self.width #y
             x = i % self.width #x
             F = Fish(x,y)
+            if self.follow_shark:
+                Fish.followed = True
+                self.follow_fish = False
             self.grid[y][x] = F
             self.entities.append(F)
            
@@ -203,12 +206,12 @@ class Planet:
             print("coordinates_possibilities_from_neighbors:", coordinates_possibilities_from_neighbors)
             print("before calling move entity x",entity.x ,"entity y", entity.y )
             ################# case move no rep
-            selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
-            choice = [{'x': selected_x, 'y': selected_y}]
+            #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+            #choice = [{'x': selected_x, 'y': selected_y}]
             ################# case move & rep
             selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
             choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
-            #choice = entity.move(possibilities_from_neighbors)
+            choice = entity.move(possibilities_from_neighbors)
             print("after calling move entity x",entity.x ,"entity y", entity.y )
             print("choice:", choice)
             len_choice = len(choice)
@@ -228,51 +231,10 @@ class Planet:
                         print("invalid choices")            
                 case _: # nothing to do
                     print("no move")
-                    #self.entities.append(entity)
-                    #self.count_fish
-                    #self.count_shark
-            '''
-            if len(choice) == 2: # move and reproduce entity
-                target_x = choice[0].get('x')
-                target_y = choice[0].get('y')
-                print("target_x:", target_x, "target_y", target_y)
-                if isinstance(entity,Shark): # case shark
-                    # check target cell
-                    if isinstance(self.grid[target_x][target_y],Fish):
-                        # to move & eat
-                        self.move_eat_entity(choice[0],entity)
-                            
-                    elif self.grid[target_x][target_y] is None:
-                        # move
-                        self.move_entity(choice[0],entity)
-                    else: 
-                        pass
-                        
-                    # to reproduce shark
                     
-                    self.reproduce_shark(choice[1])
-                    
-                    
-                elif (isinstance(entity, Fish)) and (not(isinstance(entity, Shark))): #case fish
-                    
-                    # to move
-                    self.move_entity(choice[0],entity)
-                    # to reproduce fish
-                    self.reproduce_fish(choice[1])
-                    
-                    
-            elif len(choice) == 1: # move entity
-                print("grid before the move")
-                print(self.grid)
-                self.move_entity(choice[0],entity)
-                print("grid after the move")
-                print(self.grid)
-               
-            else: # nothing to do
-                self.entities.append(entity)
-            '''   
-        #dict{'grid', 'entities', 'fishes_eaten', 'nb_fish', 'nb_shark', 'nb_reproduction', 'dead_fishes_age', 'dead_sharks_age'}       
-        return self.get_grid() # dict {'grid':self.get_grid(), 'entities': self.entities, 'fishes-eaten': count_eaten_fish, 'sharq_reproduced':  }
+ 
+        return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish}, 'dead_fishes_age', 'dead_sharks_age'}       
+        #self.get_grid() # dict {'grid':self.get_grid(), 'entities': self.entities, 'fishes-eaten': count_eaten_fish, 'sharq_reproduced':  }
                         
                     
 
