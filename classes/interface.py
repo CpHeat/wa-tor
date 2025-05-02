@@ -62,19 +62,19 @@ class Interface:
         main_frame = Frame(self.window)
         main_frame.grid(row=0, column=0)
 
-        counter_frame = Frame(main_frame, bg="green")
+        counter_frame = Frame(main_frame)
         counter_frame.grid(row=0, column=0, columnspan=2)
         self.frames['counter_frame'] = counter_frame
-        simulation_frame = Frame(main_frame, bg="yellow")
+        simulation_frame = Frame(main_frame)
         simulation_frame.grid(row=1, column=0)
         self.frames['simulation_frame'] = simulation_frame
-        control_frame = Frame(main_frame, bg="purple")
+        control_frame = Frame(main_frame)
         control_frame.grid(row=1, column=1)
         self.frames['control_frame'] = control_frame
-        control_buttons_frame = Frame(control_frame, bg="black")
+        control_buttons_frame = Frame(control_frame)
         control_buttons_frame.grid(row=11, column=0, columnspan=3)
         self.frames['control_buttons_frame'] = control_buttons_frame
-        history_frame = Frame(main_frame, bg="red")
+        history_frame = Frame(main_frame)
         history_frame.grid(row=2, column=0, columnspan=2)
         self.frames['history_frame'] = history_frame
 
@@ -112,19 +112,19 @@ class Interface:
 
     def draw_counter(self):
 
-        fish_label = Label(self.frames['counter_frame'], text="Fishes:", bg="yellow")
+        fish_label = Label(self.frames['counter_frame'], text="Fishes:")
         fish_label.grid(row=0, column=0)
-        self.fish_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.fish_nb_counter = Label(self.frames['counter_frame'], text="0")
         self.fish_nb_counter.grid(row=0, column=1)
 
-        shark_label = Label(self.frames['counter_frame'], text="Sharks:", bg="yellow")
+        shark_label = Label(self.frames['counter_frame'], text="Sharks:")
         shark_label.grid(row=0, column=2)
-        self.shark_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.shark_nb_counter = Label(self.frames['counter_frame'], text="0")
         self.shark_nb_counter.grid(row=0, column=3)
 
-        chronons_label = Label(self.frames['counter_frame'], text="Chronons:", bg="yellow")
+        chronons_label = Label(self.frames['counter_frame'], text="Chronons:")
         chronons_label.grid(row=0, column=4)
-        self.chronons_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.chronons_counter = Label(self.frames['counter_frame'], text="0")
         self.chronons_counter.grid(row=0, column=5)
 
     @classmethod
@@ -171,8 +171,6 @@ class Interface:
         self.next_button = Button(self.frames['control_buttons_frame'], text="Next", command=lambda:self.draw_wator(self.grids[SimulationControl.throwback_chronon], throwback="next"))
         self.next_button.grid(row=1, column=4)
 
-        self.start_button.grid(row=0, column=0)
-
     def update_canvas(self):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
         canvas_height = simulation_parameters['grid_height'] * CELL_SIZE
@@ -189,7 +187,7 @@ class Interface:
         self.canvas = canvas
 
     def draw_alerts(self):
-        self.alert_label = Label(self.frames['control_frame'], text="", bg="pink")
+        self.alert_label = Label(self.frames['control_frame'], text="")
         self.alert_label.grid(row=12, column=0, columnspan=3)
 
     def draw_wator(self, grid, throwback = None):

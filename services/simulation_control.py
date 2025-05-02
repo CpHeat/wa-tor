@@ -38,6 +38,8 @@ class SimulationControl:
         cls.planet = Planet(interface.follow_entities)
         cls._simulation_status = "playing"
         cls.current_chronon = cls.throwback_chronon = 0
+        interface.fish_nb_counter['text'] = cls.planet.count_fish
+        interface.shark_nb_counter['text'] = cls.planet.count_shark
 
         interface.draw_wator(cls.planet.grid)
         interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
@@ -52,14 +54,14 @@ class SimulationControl:
             cls.current_chronon += 1
             cls.throwback_chronon = cls.current_chronon
 
-            interface.chronons_counter.config(text=cls.current_chronon)
-            interface.fish_nb_counter.config(text=wator_status['nb_fish'])
-            interface.shark_nb_counter.config(text=wator_status['nb_shark'])
+            interface.chronons_counter['text'] = cls.current_chronon
+            interface.fish_nb_counter['text'] = wator_status['nb_fish']
+            interface.shark_nb_counter['text'] = wator_status['nb_shark']
             interface.throwback_chronon_label['text'] = cls.throwback_chronon
 
             interface.draw_wator(grid)
 
-            if cls.current_chronon < simulation_parameters['simulation_duration']-1:
+            if cls.current_chronon < simulation_parameters['simulation_duration']:
                 interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
 
     @classmethod
@@ -74,5 +76,11 @@ class SimulationControl:
 
     @classmethod
     def stop_simulation(cls, interface):
-        SimulationControl._simulation_status = "stopped"
+        cls._simulation_status = "stopped"
+        cls.throwback_chronon = 0
+        cls.current_chronon = 0
+        interface.chronons_counter['text'] = 0
+        interface.fish_nb_counter['text'] = 0
+        interface.shark_nb_counter['text'] = 0
+        interface.throwback_chronon_label['text'] = 0
         interface.reset_canvas()
