@@ -7,6 +7,7 @@ class Fish:
         self.y = y
         self.reproduction_time = simulation_parameters["fish_reproduction_time"]
         self.reproduction_left =  self.reproduction_time
+        self.followed = False
 
     def move(self, list):
         old_position = {"x": self.x, "y": self.y}
