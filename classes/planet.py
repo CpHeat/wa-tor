@@ -19,13 +19,15 @@ class Shark:
 
 
 class Planet:
-    def __init__(self):
+    def __init__(self, follow_entities):
         '''Initialize empty grid
         '''
-        self.height = 3#simulation_parameters.get('grid_height')
-        self.width =  3 #simulation_parameters.get('grid_width')
-        self.num_fish = 0#simulation_parameters.get('fish_reproduction_time')    
-        self.num_shark = 1# simulation_parameters.get('shark_starting_population')
+        self.follow_fish = follow_entities
+        self.follow_shark = follow_entities
+        self.height = simulation_parameters.get('grid_height')
+        self.width =  simulation_parameters.get('grid_width')
+        self.num_fish = simulation_parameters.get('fish_reproduction_time')
+        self.num_shark = simulation_parameters.get('shark_starting_population')
         self.count_eaten_fish = self.count_shark_eats = 0
         self.count_fish = self.count_shark = 0
         self.count_reproduced_fish = self.count_reproduced_shark = 0 
@@ -45,6 +47,9 @@ class Planet:
             y = i // self.width #y
             x = i % self.width #x
             S = Shark(x,y)
+            if self.follow_shark:
+                Shark.followed = True
+                self.follow_shark = False
             self.grid[y][x] = S 
             self.entities.append(S)
         
@@ -54,6 +59,9 @@ class Planet:
             y = i // self.width #y
             x = i % self.width #x
             F = Fish(x,y)
+            if self.follow_fish:
+                Fish.followed = True
+                self.follow_fish = False
             self.grid[y][x] = F
             self.entities.append(F)
            
