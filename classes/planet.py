@@ -19,7 +19,7 @@ class Shark:
 
 
 class Planet:
-    def __init__(self):
+    def __init__(self,follow_entities):
         '''Initialize empty grid
         '''
         self.height = 3#simulation_parameters.get('grid_height')
@@ -30,6 +30,8 @@ class Planet:
         self.count_fish = self.count_shark = 0
         self.count_reproduced_fish = self.count_reproduced_shark = 0 
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
+        self.follow_fish = follow_entities
+        self.follow_shark = follow_entities
         self.entities = []
         self.populate()
         
@@ -45,6 +47,9 @@ class Planet:
             y = i // self.width #y
             x = i % self.width #x
             S = Shark(x,y)
+            if self.follow_shark:
+                Shark.followed = True
+                self.follow_shark = False
             self.grid[y][x] = S 
             self.entities.append(S)
         
@@ -223,9 +228,9 @@ class Planet:
                         print("invalid choices")            
                 case _: # nothing to do
                     print("no move")
-                    self.entities.append(entity)
-                    self.count_fish
-                    self.count_shark
+                    #self.entities.append(entity)
+                    #self.count_fish
+                    #self.count_shark
             '''
             if len(choice) == 2: # move and reproduce entity
                 target_x = choice[0].get('x')
