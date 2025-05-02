@@ -30,5 +30,5 @@ class Fish(Animal):
         if(self.reproduce(new_position , old_position) == True):
             self.children_number += 1
             list_result.append(old_position)
-
+        print("Fish:move:  list_result:",list_result)
         return list_result
