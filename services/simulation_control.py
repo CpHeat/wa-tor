@@ -42,13 +42,13 @@ class SimulationControl:
     def simulation_step(cls, interface):
         if cls._simulation_status == "playing" and cls._i <= simulation_parameters['simulation_duration']:
 
-            # wator_status = cls.planet.check_entities()
-            # grid = wator_status['grid']
+            wator_status = cls.planet.check_entities()
+            grid = wator_status['grid']
             interface.chronons_counter.config(text=cls._i)
-            # interface.fish_nb_counter.config(text=wator_status['nb_fish'])
-            # interface.shark_nb_counter.config(text=wator_status['nb_sharks'])
-            #
-            # interface.draw_wator(grid)
+            interface.fish_nb_counter.config(text=wator_status['nb_fish'])
+            interface.shark_nb_counter.config(text=wator_status['nb_shark'])
+
+            interface.draw_wator(grid)
             cls._i += 1
             if cls._i < simulation_parameters['simulation_duration']-1:
                 interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
