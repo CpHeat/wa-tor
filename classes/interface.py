@@ -1,4 +1,5 @@
-from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError
+from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError, Checkbutton, \
+    BooleanVar
 
 from PIL import Image, ImageTk
 
@@ -18,6 +19,10 @@ class Interface:
         self.images = {}
         self.image_ids = []
 
+        self.fish_nb_counter = None
+        self.shark_nb_counter = None
+        self.chronons_counter = None
+
         self.grid_height_value = None
         self.grid_width_value = None
         self.simulation_length_value = None
@@ -28,6 +33,8 @@ class Interface:
         self.shark_starting_population_value = None
         self.fish_starting_population_value = None
         self.chronon_duration_value = None
+
+        self.follow_entities = False
 
         self.start_button = None
         self.pause_button = None
@@ -60,7 +67,7 @@ class Interface:
         control_frame.grid(row=1, column=1)
         self.frames['control_frame'] = control_frame
         control_buttons_frame = Frame(control_frame, bg="black")
-        control_buttons_frame.grid(row=10, column=0, columnspan=3)
+        control_buttons_frame.grid(row=11, column=0, columnspan=3)
         self.frames['control_buttons_frame'] = control_buttons_frame
         history_frame = Frame(main_frame, bg="red")
         history_frame.grid(row=2, column=0, columnspan=2)
@@ -92,18 +99,18 @@ class Interface:
 
         fish_label = Label(self.frames['counter_frame'], text="Fishes:", bg="yellow")
         fish_label.grid(row=0, column=0)
-        fish_nb = Label(self.frames['counter_frame'], text="12", bg="yellow")
-        fish_nb.grid(row=0, column=1)
+        self.fish_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.fish_nb_counter.grid(row=0, column=1)
 
         shark_label = Label(self.frames['counter_frame'], text="Sharks:", bg="yellow")
         shark_label.grid(row=0, column=2)
-        shark_nb = Label(self.frames['counter_frame'], text="15", bg="yellow")
-        shark_nb.grid(row=0, column=3)
+        self.shark_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.shark_nb_counter.grid(row=0, column=3)
 
         chronons_label = Label(self.frames['counter_frame'], text="Chronons:", bg="yellow")
         chronons_label.grid(row=0, column=4)
-        chronons_nb = Label(self.frames['counter_frame'], text="8", bg="yellow")
-        chronons_nb.grid(row=0, column=5)
+        self.chronons_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.chronons_counter.grid(row=0, column=5)
 
     @classmethod
     def input_component(cls, frame, text, default_value, row):
@@ -129,6 +136,10 @@ class Interface:
         self.shark_starvation_time_value = self.input_component(self.frames['control_frame'], "Shark starvation time:", simulation_parameters['shark_starvation_time'], 7)
         self.simulation_length_value = self.input_component(self.frames['control_frame'], "Simulation duration:", simulation_parameters['simulation_duration'], 8)
         self.chronon_duration_value = self.input_component(self.frames['control_frame'], "Chronon duration (in ms):", simulation_parameters['chronon_duration'], 9)
+
+        check_value = BooleanVar(value=False)
+        follow_entities_checkbox = Checkbutton(self.frames['control_frame'], text='Follow entities',variable=check_value, onvalue=True, offvalue=False, command=lambda: setattr(self, 'follow_entities', check_value.get()))
+        follow_entities_checkbox.grid(row=10, column=0)
 
         self.start_button = Button(self.frames['control_buttons_frame'], text="Start", command=lambda:self.check_parameters())
         self.start_button.grid(row=0, column=0)
