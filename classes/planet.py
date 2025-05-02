@@ -243,7 +243,7 @@ class Planet:
                         if len_choice == 2: # move and reproduce entity
                             self.move_and_reproduce_entity(choice[0],choice[1],entity)
                         elif len_choice == 1: # move (only) entity, eat (for shark)
-                            self.move_eat_entity(choice, entity)
+                            self.move_eat_entity(choice[0], entity)
                             
                             
 
