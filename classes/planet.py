@@ -32,6 +32,9 @@ class Planet:
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         self.follow_fish = follow_entities
         self.follow_shark = follow_entities
+        self.dead_fishes_age = 0
+        self.dead_sharks_age = 0 
+        
         self.entities = []
         self.populate()
         
@@ -46,24 +49,24 @@ class Planet:
         for i in random_indices_shark:
             y = i // self.width #y
             x = i % self.width #x
-            S = Shark(x,y)
+            new_shark = Shark(x,y)
             if self.follow_shark:
-                Shark.followed = True
+                new_shark.followed = True
                 self.follow_shark = False
-            self.grid[y][x] = S 
-            self.entities.append(S)
+            self.grid[y][x] = new_shark 
+            self.entities.append(new_shark)
         
         random_indices_fish = list(set(random_indices)- set(random_indices_shark))
         
         for i in random_indices_fish:
             y = i // self.width #y
             x = i % self.width #x
-            F = Fish(x,y)
+            new_fish = Fish(x,y)
             if self.follow_shark:
-                Fish.followed = True
+                new_fish.followed = True
                 self.follow_fish = False
-            self.grid[y][x] = F
-            self.entities.append(F)
+            self.grid[y][x] = new_fish
+            self.entities.append(new_fish)
            
     
     def get_grid(self):
@@ -208,10 +211,13 @@ class Planet:
             ################# case move no rep
             #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
             #choice = [{'x': selected_x, 'y': selected_y}]
+            #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+            #choice = [{'x': selected_x, 'y': selected_y}]
             ################# case move & rep
-            selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
-            choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
+            #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+            #choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
             choice = entity.move(possibilities_from_neighbors)
+            
             print("after calling move entity x",entity.x ,"entity y", entity.y )
             print("choice:", choice)
             len_choice = len(choice)
@@ -231,12 +237,14 @@ class Planet:
                         print("invalid choices")            
                 case _: # nothing to do
                     print("no move")
+                    if isinstance(entity,Fish) :
+                        self.dead_fishes_age += entity.age
+                    elif isinstance(entity,Shark):
+                        self.dead_sharks_age += entity.age
                     
  
-        return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish}, 'dead_fishes_age', 'dead_sharks_age'}       
-        #self.get_grid() # dict {'grid':self.get_grid(), 'entities': self.entities, 'fishes-eaten': count_eaten_fish, 'sharq_reproduced':  }
-                        
-                    
+        return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish, 'dead_fishes_age':self.dead_fishes_age, 'dead_sharks_age':self.dead_sharks_age}       
+        
 
 
   
