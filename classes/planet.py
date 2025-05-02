@@ -137,11 +137,21 @@ class Planet:
         self.entities.append(entity)
     
     # to test    
-    def move_eat_entity(self, choice, entity):
-        self.move_entity(choice[0],entity)
-        entity.eat()
-        self.count_shark_eats +=1
-        self.count_eaten_fish +=1
+    def move_eat_entity(self, target_pos_dict, entity):
+        target_x = target_pos_dict.get('x')
+        target_y = target_pos_dict.get('y')
+        if isinstance(entity,Shark): # case shark
+            # eat first
+            if isinstance(self.grid[target_y][target_x],Fish):
+                entity.eat()
+                self.count_shark_eats +=1
+                self.count_eaten_fish +=1
+            # then move
+            self.move_entity(target_pos_dict,entity)
+            
+        elif (isinstance(entity, Fish)): #case fish        
+            # to move fish
+            self.move_entity(target_pos_dict,entity)
         
         
         
@@ -199,6 +209,12 @@ class Planet:
     def check_entities(self):
         entity_copy = self.entities.copy()
         self.entities = []
+        # Reset to zero on each call — statistics for each round
+        self.count_eaten_fish = self.count_shark_eats = 0
+        self.count_fish = self.count_shark = 0
+        self.count_reproduced_fish = self.count_reproduced_shark = 0 
+        self.dead_fishes_age = 0
+        self.dead_sharks_age = 0
         for entity in entity_copy :
             print(f"check this entity.x: {entity.x}, entity.y: {entity.y}" )
             possibilities_from_neighbors = self.get_neighbors(entity.x,entity.y)
@@ -230,8 +246,9 @@ class Planet:
                         print(f"ok to move & rep | to move no rep entity at row: {entity.y} col: {entity.x} to target row:{target_y} col:{target_x}")
                         if len_choice == 2: # move and reproduce entity
                             self.move_and_reproduce_entity(choice[0],choice[1],entity)
-                        elif len_choice == 1: # move (only) entity
-                            self.move_entity(choice[0],entity)
+                        elif len_choice == 1: # move (only) entity, eat (for shark)
+                            self.move_eat_entity(choice, entity)
+                            
                             
                     else:
                         print("invalid choices")            
