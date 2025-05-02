@@ -32,6 +32,9 @@ class Planet:
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
         self.follow_fish = follow_entities
         self.follow_shark = follow_entities
+        self.dead_fishes_age = 0
+        self.dead_sharks_age = 0 
+        
         self.entities = []
         self.populate()
         
@@ -231,12 +234,14 @@ class Planet:
                         print("invalid choices")            
                 case _: # nothing to do
                     print("no move")
+                    if isinstance(entity,Fish) :
+                        self.dead_fishes_age = entity.age
+                    elif isinstance(entity,Shark):
+                        self.dead = entity.age
                     
  
-        return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish}, 'dead_fishes_age', 'dead_sharks_age'}       
-        #self.get_grid() # dict {'grid':self.get_grid(), 'entities': self.entities, 'fishes-eaten': count_eaten_fish, 'sharq_reproduced':  }
-                        
-                    
+        return {'grid':self.grid, 'entities':self.entities, 'fishes_eaten':self.count_eaten_fish, 'nb_fish':self.count_fish, 'nb_shark':self.count_shark, 'nb_reproduction_shark':self.count_reproduced_shark,'nb_reproduction_fish':self.count_reproduced_fish, 'dead_fishes_age':self.dead_fishes_age, 'dead_sharks_age':self.dead_sharks_age}       
+        
 
 
   
