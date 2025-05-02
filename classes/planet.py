@@ -211,9 +211,12 @@ class Planet:
             ################# case move no rep
             #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
             #choice = [{'x': selected_x, 'y': selected_y}]
+            #selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
+            #choice = [{'x': selected_x, 'y': selected_y}]
             ################# case move & rep
             selected_x,selected_y = random.choice(coordinates_possibilities_from_neighbors)
             choice = [{'x': selected_x, 'y': selected_y},{'x': entity.x, 'y': entity.y}]
+            choice = entity.move(possibilities_from_neighbors)
             choice = entity.move(possibilities_from_neighbors)
             print("after calling move entity x",entity.x ,"entity y", entity.y )
             print("choice:", choice)
