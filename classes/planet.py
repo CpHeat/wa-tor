@@ -5,7 +5,7 @@ import random
 
 
 class Planet:
-    def __init__(self, follow_entities):
+    def __init__(self):
         '''Initialize empty grid
         '''
         self.height = simulation_parameters.get('grid_height')
@@ -16,10 +16,12 @@ class Planet:
 
         self.count_reproduced_fish = self.count_reproduced_shark = 0
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
-        self.follow_fish = follow_entities
-        self.follow_shark = follow_entities
+        self.follow_fish = simulation_parameters.get('follow_entities')
+        self.follow_shark = simulation_parameters.get('follow_entities')
+        self.shuffle = simulation_parameters.get('shuffle_entities')
         self.dead_fishes_age = 0
         self.dead_sharks_age = 0
+        self.nb_shark_starved = 0
 
         self.entities = []
         self.next_entities = []
@@ -55,6 +57,8 @@ class Planet:
                 self.follow_fish = False
             self.grid[y][x] = new_fish
             self.entities.append(new_fish)
+        if self.shuffle:
+            random.shuffle(self.entities)
 
     def get_grid(self):
         return self.grid
@@ -102,9 +106,10 @@ class Planet:
                     else:
                         print("NOT IN CHOICE")
                 case _:  # nothing to do
-                    print("nothing to do")
+                    print("dead")
                     self.grid[entity.y][entity.x] = None
                     if isinstance(entity, Fish):
+                        print(" case fish dead")
                         self.dead_fishes_age += entity.age
                         if entity in self.entities:
                             self.entities.remove(entity)
@@ -120,12 +125,17 @@ class Planet:
                                 self.next_entities.remove(entity)
                         else:
                             self.next_entities.remove(entity)
+                        self.self.nb_shark_starved +=1
                         self.count_shark -= 1
 
         print("next entities:", self.next_entities)
+        
         self.entities = self.next_entities
+        if self.shuffle:
+            random.shuffle(self.entities)
+        
         return {'grid': self.grid, 'entities': self.entities, 'fishes_eaten': self.count_eaten_fish,
-                'nb_fish': self.count_fish, 'nb_shark': self.count_shark,
+                'nb_fish': self.count_fish, 'nb_shark': self.count_shark, 'nb_shark_starved' : self.nb_shark_starved,
                 'nb_reproduction_shark': self.count_reproduced_shark,
                 'nb_reproduction_fish': self.count_reproduced_fish, 'dead_fishes_age': self.dead_fishes_age,
                 'dead_sharks_age': self.dead_sharks_age}
