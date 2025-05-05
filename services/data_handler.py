@@ -12,4 +12,77 @@ generer une esperance de vie generale
 generer un taux de reproduction general
 recup nb de poissons
 recup nb de requins
+
+
+
+forme finale du data a enregistrer :
+
+dict = {
+    "simulation_id": 0
+    "date": DATE,
+   "duration":SMALLINT,
+   "grid_height" SMALLINT,
+   "grid_width" SMALLINT,
+   "animal_count" SMALLINT,
+   "fish_count" SMALLINT,
+   "shark_count" SMALLINT,
+   "life_expectancy" NUMERIC(8,2)  ,
+   "fish_life_expectancy" NUMERIC(8,2)  ,
+   "shark_life_expectancy" NUMERIC(8,2)  ,
+   "reproduction" SMALLINT,
+   "fish_reproduction" SMALLINT,
+   "shark_reproduction" SMALLINT,
+   "fish_eaten" SMALLINT,
+   "shark_starved" SMALLINT,
+   "detail": {
+       "chronon":,
+       animal_count SMALLINT,
+       fish_count SMALLINT,
+       shark_count SMALLINT,
+       reproduction SMALLINT,
+       fish_reproduction SMALLINT,
+       shark_reproduction SMALLINT,
+       fish_eaten SMALLINT,
+       shark_starved SMALLINT,
+   }
+}
+
+
+
 """
+from abc import ABC
+
+class DataHandler(ABC):
+    simulation_chronon_data = []
+    simulation_data = None
+
+    @classmethod
+    def reset_data(cls):
+        cls.simulation_chronon_data = []
+        cls.simulation_data = None
+
+    @classmethod
+    def chronon_data_handling(cls, simulation_chronon_data: dict):
+        """
+        calculer les enfant nés
+        stocker les poissons morts
+        stocker le nb d'individus
+        stocker l'age des morts
+        """
+        # chronon_data = {
+        #     'chronon': simulation_chronon_data['chronon'],
+        #     'animal_count': ,
+        #     'fish_count': ,
+        #     'shark_count': ,
+        #     'fish_reproduction': simulation_chronon_data['nb_reproduction_fish'],
+        #     'shark_reproduction': simulation_chronon_data['nb_reproduction_shark'],
+        #     'total_born': simulation_chronon_data['nb_reproduction_fish'] + simulation_chronon_data['nb_reproduction_shark'],
+        #     'fishes_eaten': simulation_chronon_data['fishes_eaten'],
+        #     'sharks_starved': simulation_chronon_data['sharks_starved']
+        # }
+
+        cls.simulation_chrononwise_data.append(chronon_data)
+
+
+    def simulation_end_data_handling(self):
+        pass

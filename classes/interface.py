@@ -1,6 +1,6 @@
 import copy
 from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError, Checkbutton, \
-    BooleanVar, DoubleVar
+    BooleanVar, DoubleVar, ttk
 
 from PIL import Image, ImageTk
 
@@ -62,21 +62,18 @@ class Interface:
         main_frame = Frame(self.window)
         main_frame.grid(row=0, column=0)
 
-        counter_frame = Frame(main_frame, bg="green")
+        counter_frame = Frame(main_frame)
         counter_frame.grid(row=0, column=0, columnspan=2)
         self.frames['counter_frame'] = counter_frame
-        simulation_frame = Frame(main_frame, bg="yellow")
+        simulation_frame = Frame(main_frame)
         simulation_frame.grid(row=1, column=0)
         self.frames['simulation_frame'] = simulation_frame
-        control_frame = Frame(main_frame, bg="purple")
+        control_frame = Frame(main_frame)
         control_frame.grid(row=1, column=1)
         self.frames['control_frame'] = control_frame
-        control_buttons_frame = Frame(control_frame, bg="black")
+        control_buttons_frame = Frame(control_frame)
         control_buttons_frame.grid(row=11, column=0, columnspan=3)
         self.frames['control_buttons_frame'] = control_buttons_frame
-        history_frame = Frame(main_frame, bg="red")
-        history_frame.grid(row=2, column=0, columnspan=2)
-        self.frames['history_frame'] = history_frame
 
         return self.window
 
@@ -112,19 +109,19 @@ class Interface:
 
     def draw_counter(self):
 
-        fish_label = Label(self.frames['counter_frame'], text="Fishes:", bg="yellow")
+        fish_label = Label(self.frames['counter_frame'], text="Fishes:")
         fish_label.grid(row=0, column=0)
-        self.fish_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.fish_nb_counter = Label(self.frames['counter_frame'], text="0")
         self.fish_nb_counter.grid(row=0, column=1)
 
-        shark_label = Label(self.frames['counter_frame'], text="Sharks:", bg="yellow")
+        shark_label = Label(self.frames['counter_frame'], text="Sharks:")
         shark_label.grid(row=0, column=2)
-        self.shark_nb_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.shark_nb_counter = Label(self.frames['counter_frame'], text="0")
         self.shark_nb_counter.grid(row=0, column=3)
 
-        chronons_label = Label(self.frames['counter_frame'], text="Chronons:", bg="yellow")
+        chronons_label = Label(self.frames['counter_frame'], text="Chronons:")
         chronons_label.grid(row=0, column=4)
-        self.chronons_counter = Label(self.frames['counter_frame'], text="0", bg="yellow")
+        self.chronons_counter = Label(self.frames['counter_frame'], text="0")
         self.chronons_counter.grid(row=0, column=5)
 
     @classmethod
@@ -147,7 +144,7 @@ class Interface:
         self.fish_reproduction_time_value = self.input_component(self.frames['control_frame'], "Fish reproduction time:", simulation_parameters['fish_reproduction_time'], 3)
         self.shark_starting_population_value = self.input_component(self.frames['control_frame'], "Shark starting population:", simulation_parameters['shark_starting_population'], 4)
         self.shark_reproduction_time_value = self.input_component(self.frames['control_frame'], "Shark reproduction time:", simulation_parameters['shark_reproduction_time'], 5)
-        self.shark_starting_energy_value = self.input_component(self.frames['control_frame'], "Shark starting energy:", simulation_parameters['shark_starting_energy'], 6)
+        self.shark_energy_gain_value = self.input_component(self.frames['control_frame'], "Shark energy gain:", simulation_parameters['shark_energy_gain'], 6)
         self.shark_starvation_time_value = self.input_component(self.frames['control_frame'], "Shark starvation time:", simulation_parameters['shark_starvation_time'], 7)
         self.simulation_length_value = self.input_component(self.frames['control_frame'], "Simulation duration:", simulation_parameters['simulation_duration'], 8)
         self.chronon_duration_value = self.input_component(self.frames['control_frame'], "Chronon duration (in ms):", simulation_parameters['chronon_duration'], 9)
@@ -171,7 +168,8 @@ class Interface:
         self.next_button = Button(self.frames['control_buttons_frame'], text="Next", command=lambda:self.draw_wator(self.grids[SimulationControl.throwback_chronon], throwback="next"))
         self.next_button.grid(row=1, column=4)
 
-        self.start_button.grid(row=0, column=0)
+        history_button = Button(self.frames['control_buttons_frame'], text="History", command=self.open_history)
+        history_button.grid(row=3, column=2)
 
     def update_canvas(self):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
@@ -189,7 +187,7 @@ class Interface:
         self.canvas = canvas
 
     def draw_alerts(self):
-        self.alert_label = Label(self.frames['control_frame'], text="", bg="pink")
+        self.alert_label = Label(self.frames['control_frame'], text="")
         self.alert_label.grid(row=12, column=0, columnspan=3)
 
     def draw_wator(self, grid, throwback = None):
@@ -274,7 +272,7 @@ class Interface:
         valid = self.check_parameter(self.fish_reproduction_time_value, "fish reproduction time value", 1, valid)
         valid = self.check_parameter(self.shark_starting_population_value, "shark starting population value", 0, valid)
         valid = self.check_parameter(self.shark_reproduction_time_value, "shark reproduction time value", 0, valid)
-        valid = self.check_parameter(self.shark_starting_energy_value, "shark starting energy value", 1, valid)
+        valid = self.check_parameter(self.shark_energy_gain_value, "shark energy gain value", 1, valid)
         valid = self.check_parameter(self.shark_starvation_time_value, "shark starvation time value",0, valid)
         valid = self.check_parameter(self.simulation_length_value, "simulation length value", 1, valid)
         valid = self.check_parameter(self.chronon_duration_value, "chronon duration value", 0, valid)
@@ -313,3 +311,35 @@ class Interface:
             self.alert_label['text']+=f"\nEnter a valid {parameter_name} (> {min_value})"
 
         return valid
+
+    @classmethod
+    def open_history(cls):
+        history_window = Tk()
+        history_window.title("Simulation history")
+
+        canvas = Canvas(history_window, borderwidth=0, width=1000, height=1000)
+        scrollbar = ttk.Scrollbar(history_window, orient="vertical", command=canvas.yview)
+        scrollable_frame = ttk.Frame(canvas)
+
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
+        )
+
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        label = ttk.Label(scrollable_frame, text="Simulations history:", font=("Arial", 14))
+        label.pack(pady=10)
+
+        # Contenu simulé
+        for i in range(50):
+            item_label = ttk.Label(scrollable_frame, text=f"Simulation #{i + 1}")
+            item_label.pack(anchor="w", padx=10)
+
+        history_window.mainloop()
