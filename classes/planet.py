@@ -29,6 +29,7 @@ class Planet:
 
         self.check_counter = 0
 
+
     def populate(self):
         '''Populate randomly the grid with fishes and sharks
         '''
@@ -86,14 +87,14 @@ class Planet:
                 else:
                     print(f"init move {entity}")
                     self.move(entity, choice)
-        
+
         self.entities = self.next_entities
 
         if self.shuffle:
             random.shuffle(self.entities)
-        
+
         return {'grid': self.grid, 'entities': self.entities, 'fishes_eaten': self.count_eaten_fish, 'nb_shark_starved' : self.nb_shark_starved,
-                'nb_fish': self.count_fish, 'nb_shark': self.count_shark, 
+                'nb_fish': self.count_fish, 'nb_shark': self.count_shark,
                 'nb_reproduction_shark': self.count_reproduced_shark,
                 'nb_reproduction_fish': self.count_reproduced_fish, 'dead_fishes_age': self.dead_fishes_age,
                 'dead_sharks_age': self.dead_sharks_age}
