@@ -21,13 +21,14 @@ class Shark(Animal):
 
     def move(self, list):
         self.age += 1
+        self.shark_starvation_left -= 1
         old_position = {"x": self.x, "y": self.y}
         verif = {"N": list[0] , "S": list[1], "E": list[2], "W": list[3]}
         direction = []
         direction_fish = []
         list_result = []
         for key, value in verif.items():
-            if((isinstance(value,Fish)) and (isinstance(value,Shark) == False)):
+            if isinstance(value,Fish):
                 direction_fish.append(key)
             elif(value == None):
                 direction.append(key)          
@@ -49,13 +50,16 @@ class Shark(Animal):
             self.children_number +=1
             list_result.append(old_position)
 
+        print(f"move shark {self} : list_result {list_result} self.shark_starvation_left: {self.shark_starvation_left}")
         return list_result if self.shark_starvation_left > 0 else []
     
     def eat(self):
+        print(f"{self} eats at {self.shark_starvation_left}")
         self.shark_starvation_left += self.shark_energy_gain
         if self.shark_starvation_left > self.shark_starvation_time:
             self.shark_starvation_left = self.shark_starvation_time
         self.fish_eaten += 1
 
-    def lost_life(self):
-        self.shark_starvation_left -= 1
+    # def lost_life(self):
+    #     print(f"{self} starved left: {self.shark_starvation_left}")
+    #     self.shark_starvation_left -= 1
