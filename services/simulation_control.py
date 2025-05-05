@@ -26,8 +26,8 @@ class SimulationControl:
         simulation_parameters['fish_starting_population'] = int(interface.fish_starting_population_value.get())
         simulation_parameters['chronon_duration'] = int(interface.chronon_duration_value.get())
 
-        simulation_parameters['follow_entities'] = interface.follow_entities_value
-        simulation_parameters['shuffle_entities'] = interface.shuffle_entities_value
+        simulation_parameters['follow_entities'] = interface.follow_entities_value.get()
+        simulation_parameters['shuffle_entities'] = interface.shuffle_entities_value.get()
 
     @classmethod
     def start_simulation(cls, interface):

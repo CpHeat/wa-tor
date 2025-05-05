@@ -155,7 +155,7 @@ class Interface:
         follow_entities_checkbox = Checkbutton(self.frames['control_frame'], text='Follow entities',variable=self.follow_entities_value, onvalue=True, offvalue=False, command=lambda: setattr(self, 'follow_entities_value', self.follow_entities_value))
         follow_entities_checkbox.grid(row=10, column=0)
 
-        self.shuffle_entities_value = BooleanVar(value=False)
+        self.shuffle_entities_value = BooleanVar(value=True)
         shuffle_entities_checkbox = Checkbutton(self.frames['control_frame'], text='shuffle entities',
                                                variable=self.shuffle_entities_value, onvalue=True, offvalue=False,
                                                command=lambda: setattr(self, 'shuffle_entities_value',
