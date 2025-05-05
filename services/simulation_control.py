@@ -27,6 +27,7 @@ class SimulationControl:
         simulation_parameters['chronon_duration'] = int(interface.chronon_duration_value.get())
 
         simulation_parameters['follow_entities'] = interface.follow_entities_value
+        simulation_parameters['shuffle_entities'] = interface.shuffle_entities_value
 
     @classmethod
     def start_simulation(cls, interface):

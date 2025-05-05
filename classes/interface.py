@@ -35,7 +35,9 @@ class Interface:
         self.shark_starting_population_value = None
         self.fish_starting_population_value = None
         self.chronon_duration_value = None
+
         self.follow_entities_value = None
+        self.shuffle_entities_value = None
 
         self.start_button = None
         self.pause_button = None
@@ -152,6 +154,13 @@ class Interface:
         self.follow_entities_value = BooleanVar(value=False)
         follow_entities_checkbox = Checkbutton(self.frames['control_frame'], text='Follow entities',variable=self.follow_entities_value, onvalue=True, offvalue=False, command=lambda: setattr(self, 'follow_entities_value', self.follow_entities_value))
         follow_entities_checkbox.grid(row=10, column=0)
+
+        self.shuffle_entities_value = BooleanVar(value=False)
+        shuffle_entities_checkbox = Checkbutton(self.frames['control_frame'], text='shuffle entities',
+                                               variable=self.shuffle_entities_value, onvalue=True, offvalue=False,
+                                               command=lambda: setattr(self, 'shuffle_entities_value',
+                                                                       self.shuffle_entities_value))
+        shuffle_entities_checkbox.grid(row=10, column=1)
 
         self.start_button = Button(self.frames['control_buttons_frame'], text="Start", command=lambda:self.check_parameters())
         self.start_button.grid(row=0, column=0)
