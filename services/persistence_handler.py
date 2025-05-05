@@ -55,6 +55,13 @@ class PersistenceHandler(ABC):
             "duration": 50,
             "grid_height": 10,
             "grid_width": 10,
+            "fish_starting_population": 8,
+            "shark_starting_population": 6,
+            "fish_reproduction_time": 9,
+            "shark_reproduction_time": 8,
+            "shark_starvation_time": 4,
+            "shark_energy_gain": 3,
+            "shuffled_entities": True,
             "animal_count": 54,
             "fish_count": 12,
             "shark_count": 47,
@@ -99,11 +106,13 @@ class PersistenceHandler(ABC):
             simulation_request = """
                 INSERT INTO simulation (
                     simulation_id, date, duration, grid_height, grid_width,
+                    fish_starting_population, shark_starting_population, fish_reproduction_time,
+                    shark_reproduction_time, shark_starvation_time, shark_energy_gain, shuffled_entities,
                     animal_count, fish_count, shark_count, life_expectancy,
                     fish_life_expectancy, shark_life_expectancy, reproduction,
                     fish_reproduction, shark_reproduction, fish_eaten, shark_starved
                 ) VALUES (
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                 )
             """
 
@@ -113,6 +122,13 @@ class PersistenceHandler(ABC):
                 data["duration"],
                 data["grid_height"],
                 data["grid_width"],
+                data["fish_starting_population"],
+                data["shark_starting_population"],
+                data["fish_reproduction_time"],
+                data["shark_reproduction_time"],
+                data["shark_starvation_time"],
+                data["shark_energy_gain"],
+                data["shuffled_entities"],
                 data["animal_count"],
                 data["fish_count"],
                 data["shark_count"],

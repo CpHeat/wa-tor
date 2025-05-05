@@ -70,7 +70,7 @@ class Planet:
         self.check_counter += 1
 
         # Reset to zero on each call — statistics for each round
-        self.count_eaten_fish = self.count_shark_eats = 0
+        self.count_eaten_fish = 0
         self.count_reproduced_fish = self.count_reproduced_shark = 0
         self.dead_fishes_age = 0
         self.dead_sharks_age = 0
@@ -92,8 +92,8 @@ class Planet:
         if self.shuffle:
             random.shuffle(self.entities)
         
-        return {'grid': self.grid, 'entities': self.entities, 'fishes_eaten': self.count_eaten_fish,
-                'nb_fish': self.count_fish, 'nb_shark': self.count_shark, 'nb_shark_starved' : self.nb_shark_starved,
+        return {'grid': self.grid, 'entities': self.entities, 'fishes_eaten': self.count_eaten_fish, 'nb_shark_starved' : self.nb_shark_starved,
+                'nb_fish': self.count_fish, 'nb_shark': self.count_shark, 
                 'nb_reproduction_shark': self.count_reproduced_shark,
                 'nb_reproduction_fish': self.count_reproduced_fish, 'dead_fishes_age': self.dead_fishes_age,
                 'dead_sharks_age': self.dead_sharks_age}
@@ -137,7 +137,6 @@ class Planet:
     def shark_eats(self, entity, x, y):
         entity.eat()
         self.destroy_entity(self.grid[y][x], x, y)
-        self.count_shark_eats += 1
         self.count_eaten_fish += 1
 
     def get_neighbors(self, x, y):
