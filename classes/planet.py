@@ -125,7 +125,7 @@ class Planet:
                                 self.next_entities.remove(entity)
                         else:
                             self.next_entities.remove(entity)
-                        self.self.nb_shark_starved +=1
+                        self.nb_shark_starved +=1
                         self.count_shark -= 1
 
         print("next entities:", self.next_entities)

@@ -51,6 +51,10 @@ dict = {
 
 """
 from abc import ABC
+from datetime import datetime
+
+from services.persistence_handler import PersistenceHandler
+
 
 class DataHandler(ABC):
     simulation_chronon_data = []
@@ -81,8 +85,55 @@ class DataHandler(ABC):
         #     'sharks_starved': simulation_chronon_data['sharks_starved']
         # }
 
-        cls.simulation_chrononwise_data.append(chronon_data)
+        # cls.simulation_chrononwise_data.append(chronon_data)
 
+    @classmethod
+    def final_data_handling(cls, simulation_chronon_data):
 
-    def simulation_end_data_handling(self):
+        previous_ids = cls.get_previous_simulation_ids()
+
+        data = {
+            "simulation_id": 0,
+            "date": datetime.now(),
+            "duration": 50,
+            "grid_height": 10,
+            "grid_width": 10,
+            "animal_count": 54,
+            "fish_count": 12,
+            "shark_count": 47,
+            "life_expectancy": 2.87,
+            "fish_life_expectancy": 5.87,
+            "shark_life_expectancy": 6.51,
+            "reproduction": 10,
+            "fish_reproduction": 7,
+            "shark_reproduction": 5,
+            "fish_eaten": 45,
+            "shark_starved": 23,
+            "detail": [
+                {
+                    "chronon": 1,
+                    "animal_count": 14,
+                    "fish_count": 75,
+                    "shark_count": 54,
+                    "reproduction": 5,
+                    "fish_reproduction": 4,
+                    "shark_reproduction": 3,
+                    "fish_eaten": 14,
+                    "shark_starved": 57,
+                },
+                {
+                    "chronon": 2,
+                    "animal_count": 58,
+                    "fish_count": 45,
+                    "shark_count": 1,
+                    "reproduction": 7,
+                    "fish_reproduction": 3,
+                    "shark_reproduction": 8,
+                    "fish_eaten": 145,
+                    "shark_starved": 87,
+                }
+            ]
+        }
+
         pass
+

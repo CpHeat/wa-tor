@@ -26,13 +26,16 @@ class SimulationControl:
         simulation_parameters['fish_starting_population'] = int(interface.fish_starting_population_value.get())
         simulation_parameters['chronon_duration'] = int(interface.chronon_duration_value.get())
 
+        simulation_parameters['follow_entities'] = interface.follow_entities_value
+        simulation_parameters['shuffle_entities'] = interface.shuffle_entities_value
+
     @classmethod
     def start_simulation(cls, interface):
         cls.set_parameters(interface)
 
         interface.update_canvas()
 
-        cls.planet = Planet(interface.follow_entities)
+        cls.planet = Planet()
         cls._simulation_status = "playing"
         cls.current_chronon = cls.throwback_chronon = 0
         interface.fish_nb_counter['text'] = cls.planet.count_fish
@@ -46,6 +49,7 @@ class SimulationControl:
         if cls._simulation_status == "playing" and cls.current_chronon <= simulation_parameters['simulation_duration']:
 
             wator_status = cls.planet.check_entities()
+            DataHandler.chronon_data_handling(wator_status)
             grid = wator_status['grid']
 
             cls.current_chronon += 1
@@ -60,6 +64,8 @@ class SimulationControl:
 
             if cls.current_chronon < simulation_parameters['simulation_duration']:
                 interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
+            else:
+                DataHandler.final_data_handling(wator_status)
 
     @classmethod
     def pause_simulation(cls, interface):
