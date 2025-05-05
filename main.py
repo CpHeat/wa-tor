@@ -5,5 +5,6 @@ interface = Interface()
 
 if __name__ == "__main__":
 
-    interface.initialize_interface()
-    interface.window.mainloop()
+    PersistenceHandler.get_next_simulation_id()
+    # interface.initialize_interface()
+    # interface.window.mainloop()

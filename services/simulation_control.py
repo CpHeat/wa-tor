@@ -36,6 +36,19 @@ class SimulationControl:
         interface.update_canvas()
 
         cls.planet = Planet()
+        initial_data = {
+            'grid': cls.planet.grid,
+            'entities': cls.planet.entities,
+            'fishes_eaten': cls.planet.count_eaten_fish,
+            'nb_shark_starved': cls.planet.nb_shark_starved,
+            'nb_fish': cls.planet.count_fish, 'nb_shark': cls.planet.count_shark,
+            'nb_reproduction_shark': cls.planet.count_reproduced_shark,
+            'nb_reproduction_fish': cls.planet.count_reproduced_fish,
+            'dead_fishes_age': cls.planet.dead_fishes_age,
+            'dead_sharks_age': cls.planet.dead_sharks_age
+        }
+        DataHandler.chronon_data_handling(0, initial_data)
+
         cls._simulation_status = "playing"
         cls.current_chronon = cls.throwback_chronon = 0
         interface.fish_nb_counter['text'] = cls.planet.count_fish
@@ -48,12 +61,12 @@ class SimulationControl:
     def simulation_step(cls, interface):
         if cls._simulation_status == "playing" and cls.current_chronon <= simulation_parameters['simulation_duration']:
 
-            wator_status = cls.planet.check_entities()
-            DataHandler.chronon_data_handling(wator_status)
-            grid = wator_status['grid']
-
             cls.current_chronon += 1
             cls.throwback_chronon = cls.current_chronon
+
+            wator_status = cls.planet.check_entities()
+            DataHandler.chronon_data_handling(cls.current_chronon, wator_status)
+            grid = wator_status['grid']
 
             interface.chronons_counter['text'] = cls.current_chronon
             interface.fish_nb_counter['text'] = wator_status['nb_fish']

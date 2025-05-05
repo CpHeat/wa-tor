@@ -73,7 +73,7 @@ class DataHandler(ABC):
         cls.simulation_data = None
 
     @classmethod
-    def chronon_data_handling(cls, simulation_chronon_data: dict):
+    def chronon_data_handling(cls, simulation_chronon, simulation_chronon_data: dict):
         """
         calculer les enfant nés
         stocker les poissons morts
@@ -81,7 +81,7 @@ class DataHandler(ABC):
         stocker l'age des morts
         """
         # chronon_data = {
-        #     'chronon': simulation_chronon_data['chronon'],
+        #     'chronon': simulation_chronon,
         #     'animal_count': ,
         #     'fish_count': ,
         #     'shark_count': ,
@@ -97,10 +97,10 @@ class DataHandler(ABC):
     @classmethod
     def final_data_handling(cls, simulation_chronon_data):
 
-        previous_ids = cls.get_previous_simulation_ids()
+        simulation_id = PersistenceHandler.get_next_simulation_id()
 
         data = {
-            "simulation_id": 0,
+            "simulation_id": simulation_id,
             "date": datetime.now(),
             "duration": 50,
             "grid_height": 10,
