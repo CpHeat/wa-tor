@@ -1,11 +1,11 @@
 # Default parameters
 simulation_parameters = {
     # Grid size (width/height)
-    'grid_width': 10,
-    'grid_height': 10,
+    'grid_width': 5,
+    'grid_height': 5,
     # Sharks/Fishes number
     'shark_starting_population': 2,
-    'fish_starting_population': 20,
+    'fish_starting_population': 2,
     # Reproduction cycle duration
     'fish_reproduction_time': 5,
     'shark_reproduction_time': 5,
