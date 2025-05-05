@@ -12,6 +12,43 @@ generer une esperance de vie generale
 generer un taux de reproduction general
 recup nb de poissons
 recup nb de requins
+
+
+
+forme finale du data a enregistrer :
+
+dict = {
+    "simulation_id": 0
+    "date": DATE,
+   "duration":SMALLINT,
+   "grid_height" SMALLINT,
+   "grid_width" SMALLINT,
+   "animal_count" SMALLINT,
+   "fish_count" SMALLINT,
+   "shark_count" SMALLINT,
+   "life_expectancy" NUMERIC(8,2)  ,
+   "fish_life_expectancy" NUMERIC(8,2)  ,
+   "shark_life_expectancy" NUMERIC(8,2)  ,
+   "reproduction" SMALLINT,
+   "fish_reproduction" SMALLINT,
+   "shark_reproduction" SMALLINT,
+   "fish_eaten" SMALLINT,
+   "shark_starved" SMALLINT,
+   "detail": {
+       "chronon":,
+       animal_count SMALLINT,
+       fish_count SMALLINT,
+       shark_count SMALLINT,
+       reproduction SMALLINT,
+       fish_reproduction SMALLINT,
+       shark_reproduction SMALLINT,
+       fish_eaten SMALLINT,
+       shark_starved SMALLINT,
+   }
+}
+
+
+
 """
 from abc import ABC
 

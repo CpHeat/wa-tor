@@ -1,6 +1,6 @@
 import copy
 from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError, Checkbutton, \
-    BooleanVar, DoubleVar
+    BooleanVar, DoubleVar, ttk
 
 from PIL import Image, ImageTk
 
@@ -74,9 +74,6 @@ class Interface:
         control_buttons_frame = Frame(control_frame)
         control_buttons_frame.grid(row=11, column=0, columnspan=3)
         self.frames['control_buttons_frame'] = control_buttons_frame
-        history_frame = Frame(main_frame)
-        history_frame.grid(row=2, column=0, columnspan=2)
-        self.frames['history_frame'] = history_frame
 
         return self.window
 
@@ -170,6 +167,9 @@ class Interface:
         self.throwback_chronon_label.grid(row=1, column=2)
         self.next_button = Button(self.frames['control_buttons_frame'], text="Next", command=lambda:self.draw_wator(self.grids[SimulationControl.throwback_chronon], throwback="next"))
         self.next_button.grid(row=1, column=4)
+
+        history_button = Button(self.frames['control_buttons_frame'], text="History", command=self.open_history)
+        history_button.grid(row=3, column=2)
 
     def update_canvas(self):
         canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
@@ -311,3 +311,35 @@ class Interface:
             self.alert_label['text']+=f"\nEnter a valid {parameter_name} (> {min_value})"
 
         return valid
+
+    @classmethod
+    def open_history(cls):
+        history_window = Tk()
+        history_window.title("Simulation history")
+
+        canvas = Canvas(history_window, borderwidth=0, width=1000, height=1000)
+        scrollbar = ttk.Scrollbar(history_window, orient="vertical", command=canvas.yview)
+        scrollable_frame = ttk.Frame(canvas)
+
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(
+                scrollregion=canvas.bbox("all")
+            )
+        )
+
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        label = ttk.Label(scrollable_frame, text="Simulations history:", font=("Arial", 14))
+        label.pack(pady=10)
+
+        # Contenu simulé
+        for i in range(50):
+            item_label = ttk.Label(scrollable_frame, text=f"Simulation #{i + 1}")
+            item_label.pack(anchor="w", padx=10)
+
+        history_window.mainloop()
