@@ -161,3 +161,22 @@ class PersistenceHandler(ABC):
         finally:
             cursor.close()
             conn.close()
+
+    @classmethod
+    def get_previous_simulation_ids(cls):
+
+        conn = PersistenceHandler.connect_ddb()
+
+        try:
+            cursor = conn.cursor()
+            simulation_ids_request = "SELECT simulation_id FROM simulation"
+            cursor.execute(simulation_ids_request)
+
+        except Exception as e:
+            print(f"Database error: {e}")
+
+        finally:
+            cursor.close()
+            conn.close()
+
+        print("simulation_ids_request", simulation_ids_request)

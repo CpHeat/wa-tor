@@ -16,7 +16,10 @@ simulation_parameters = {
     # Simulation duration (in chronons)
     'simulation_duration': 50,
     # Chronon duration (in ms)
-    'chronon_duration': 500
+    'chronon_duration': 500,
+
+    'follow_entities': False,
+    'shuffle_entities': True
 }
 
 # Cell size (in px)

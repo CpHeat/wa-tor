@@ -35,8 +35,7 @@ class Interface:
         self.shark_starting_population_value = None
         self.fish_starting_population_value = None
         self.chronon_duration_value = None
-
-        self.follow_entities = False
+        self.follow_entities_value = None
 
         self.start_button = None
         self.pause_button = None
@@ -149,8 +148,9 @@ class Interface:
         self.simulation_length_value = self.input_component(self.frames['control_frame'], "Simulation duration:", simulation_parameters['simulation_duration'], 8)
         self.chronon_duration_value = self.input_component(self.frames['control_frame'], "Chronon duration (in ms):", simulation_parameters['chronon_duration'], 9)
 
-        check_value = BooleanVar(value=False)
-        follow_entities_checkbox = Checkbutton(self.frames['control_frame'], text='Follow entities',variable=check_value, onvalue=True, offvalue=False, command=lambda: setattr(self, 'follow_entities', check_value.get()))
+
+        self.follow_entities_value = BooleanVar(value=False)
+        follow_entities_checkbox = Checkbutton(self.frames['control_frame'], text='Follow entities',variable=self.follow_entities_value, onvalue=True, offvalue=False, command=lambda: setattr(self, 'follow_entities_value', self.follow_entities_value))
         follow_entities_checkbox.grid(row=10, column=0)
 
         self.start_button = Button(self.frames['control_buttons_frame'], text="Start", command=lambda:self.check_parameters())
