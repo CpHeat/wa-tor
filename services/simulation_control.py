@@ -1,8 +1,5 @@
-from tkinter import NW
-
-from PIL import Image, ImageTk
-
 from classes.planet import Planet
+from services.data_handler import DataHandler
 from settings import simulation_parameters
 
 
@@ -24,7 +21,7 @@ class SimulationControl:
         simulation_parameters['fish_reproduction_time'] = int(interface.fish_reproduction_time_value.get())
         simulation_parameters['shark_reproduction_time'] = int(interface.shark_reproduction_time_value.get())
         simulation_parameters['shark_starvation_time'] = int(interface.shark_starvation_time_value.get())
-        simulation_parameters['shark_starting_energy'] = int(interface.shark_starting_energy_value.get())
+        simulation_parameters['shark_energy_gain'] = int(interface.shark_energy_gain_value.get())
         simulation_parameters['shark_starting_population'] = int(interface.shark_starting_population_value.get())
         simulation_parameters['fish_starting_population'] = int(interface.fish_starting_population_value.get())
         simulation_parameters['chronon_duration'] = int(interface.chronon_duration_value.get())
@@ -79,6 +76,7 @@ class SimulationControl:
         cls._simulation_status = "stopped"
         cls.throwback_chronon = 0
         cls.current_chronon = 0
+        DataHandler.reset_data()
         interface.chronons_counter['text'] = 0
         interface.fish_nb_counter['text'] = 0
         interface.shark_nb_counter['text'] = 0

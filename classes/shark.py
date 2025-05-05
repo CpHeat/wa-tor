@@ -9,12 +9,11 @@ class Shark(Animal):
         #nb deplacement avant retirer une vie
         self.shark_starvation_time = simulation_parameters['shark_starvation_time']
         #nb de vie du requin
-        self.shark_starting_energy_time = simulation_parameters['shark_starting_energy']
+        self.shark_energy_gain = simulation_parameters['shark_energy_gain']
         #temps avant reproduction
         self.reproduction_time = simulation_parameters["shark_reproduction_time"]
             
         self.shark_starvation_left = self.shark_starvation_time
-        self.shark_starting_energy_left = self.shark_starting_energy_time
         self.reproduction_left =  self.reproduction_time
 
         self.fish_eaten = 0
@@ -41,7 +40,6 @@ class Shark(Animal):
         #move
         if(len(list_result) == 1):
             new_position = list_result[0]
-            self.lost_life()
         #not move
         else:
             new_position = old_position       
@@ -51,15 +49,13 @@ class Shark(Animal):
             self.children_number +=1
             list_result.append(old_position)
 
-        return list_result if self.shark_starting_energy_left > 0 else []
+        return list_result if self.shark_starvation_left > 0 else []
     
     def eat(self):
-        self.shark_starvation_left = self.shark_starvation_time
+        self.shark_starvation_left += self.shark_energy_gain
+        if self.shark_starvation_left > self.shark_starvation_time:
+            self.shark_starvation_left = self.shark_starvation_time
         self.fish_eaten += 1
 
     def lost_life(self):
-        if(self.shark_starvation_left > 0):
-            self.shark_starvation_left -= 1
-        elif(self.shark_starting_energy_left > 0):
-            self.shark_starting_energy_left -= 1
-            self.shark_starvation_left = self.shark_starvation_time
+        self.shark_starvation_left -= 1

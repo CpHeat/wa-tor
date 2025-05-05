@@ -53,23 +53,33 @@ dict = {
 from abc import ABC
 
 class DataHandler(ABC):
-    simulation_chrononwise_data = []
+    simulation_chronon_data = []
+    simulation_data = None
 
     @classmethod
-    def chronon_data_handling(cls, simulation_data: dict):
+    def reset_data(cls):
+        cls.simulation_chronon_data = []
+        cls.simulation_data = None
+
+    @classmethod
+    def chronon_data_handling(cls, simulation_chronon_data: dict):
         """
         calculer les enfant nés
         stocker les poissons morts
         stocker le nb d'individus
         stocker l'age des morts
         """
-        chronon_data = {
-            'fishes_born': simulation_data['nb_reproduction_fish'],
-            'sharks_born': simulation_data['nb_reproduction_shark'],
-            'total_born': simulation_data['nb_reproduction_fish'] + simulation_data['nb_reproduction_shark'],
-            'fishes_eaten': simulation_data['fishes_eaten'],
-            'sharks_starved': simulation_data['sharks_starved']
-        }
+        # chronon_data = {
+        #     'chronon': simulation_chronon_data['chronon'],
+        #     'animal_count': ,
+        #     'fish_count': ,
+        #     'shark_count': ,
+        #     'fish_reproduction': simulation_chronon_data['nb_reproduction_fish'],
+        #     'shark_reproduction': simulation_chronon_data['nb_reproduction_shark'],
+        #     'total_born': simulation_chronon_data['nb_reproduction_fish'] + simulation_chronon_data['nb_reproduction_shark'],
+        #     'fishes_eaten': simulation_chronon_data['fishes_eaten'],
+        #     'sharks_starved': simulation_chronon_data['sharks_starved']
+        # }
 
         cls.simulation_chrononwise_data.append(chronon_data)
 

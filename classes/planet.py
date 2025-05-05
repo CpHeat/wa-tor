@@ -96,6 +96,8 @@ class Planet:
                         if len_choice == 2:  # move and reproduce entity
                             self.move_and_reproduce_entity(choice[0], choice[1], entity)
                         elif len_choice == 1:  # move (only) entity, eat (for shark)
+                            if isinstance(entity, Shark) and choice[0]['x'] == entity.x and choice[0]['y'] == entity.y:
+                                entity.lost_life()
                             self.move_eat_entity(choice[0], entity)
                     else:
                         print("NOT IN CHOICE")
@@ -207,6 +209,8 @@ class Planet:
 
                 self.count_shark_eats += 1
                 self.count_eaten_fish += 1
+            else:
+                entity.lost_life()
             # then move
             self.move_entity(target_pos_dict, entity)
 
