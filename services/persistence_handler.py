@@ -9,6 +9,14 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 class PersistenceHandler(ABC):
     """
     An abstract class to handle data persistence in the DDB.
+
+    Methods
+    -------
+    create_ddb: Creates the database and its tables.
+    connect_ddb: Connects to the database.
+    load_data: Loads data from the database.
+    save_data: Saves data in the database.
+    get_next_simulation_id: Returns the next available simulation ID.
     """
     load_dotenv()
 

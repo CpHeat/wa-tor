@@ -1,20 +1,35 @@
+from classes.interface import Interface
 from classes.planet import Planet
 from services.data_handler import DataHandler
 from settings import simulation_parameters
 
 
 class SimulationControl:
+    """
+    Controls the simulation and bridges the interface, the logic and the persistence system.
+
+    Methods
+    -------
+    set_parameters: Sets the parameters of the simulation from the input values.
+    start_simulation: Starts the simulation.
+    simulation_step: Advances the simulation one step further.
+    pause_simulation: Pauses the simulation.
+    stop_simulation: Stops and resets the simulation.
+    """
     current_chronon = 0
     throwback_chronon = 0
     _simulation_status = "playing"
     simulation_duration = simulation_parameters['simulation_duration']
     _planet = None
 
-    def __init__(self):
-        pass
-
     @classmethod
-    def set_parameters(cls, interface):
+    def set_parameters(cls, interface:Interface) -> None:
+        """
+        Sets the parameters of the simulation from the input values.
+
+        Parameters:
+            interface (Interface): Interface class instance.
+        """
         simulation_parameters['grid_height'] = int(interface.grid_height_value.get())
         simulation_parameters['grid_width'] = int(interface.grid_width_value.get())
         simulation_parameters['simulation_duration'] = int(interface.simulation_duration_value.get())
@@ -30,7 +45,13 @@ class SimulationControl:
         simulation_parameters['shuffle_entities'] = interface.shuffle_entities_value.get()
 
     @classmethod
-    def start_simulation(cls, interface):
+    def start_simulation(cls, interface:Interface) -> None:
+        """
+        Starts the simulation.
+
+        Parameters:
+            interface (Interface): Interface class instance.
+        """
         cls.set_parameters(interface)
 
         interface.reset_canvas()
@@ -58,7 +79,13 @@ class SimulationControl:
         interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
 
     @classmethod
-    def simulation_step(cls, interface):
+    def simulation_step(cls, interface:Interface) -> None:
+        """
+        Advances the simulation one step further.
+
+        Parameters:
+            interface (Interface): Interface class instance.
+        """
         if cls._simulation_status == "playing" and cls.current_chronon <= simulation_parameters['simulation_duration']:
 
             cls.current_chronon += 1
@@ -81,7 +108,13 @@ class SimulationControl:
                 DataHandler.final_data_handling(wator_status)
 
     @classmethod
-    def pause_simulation(cls, interface):
+    def pause_simulation(cls, interface:Interface) -> None:
+        """
+        Pauses the simulation.
+
+        Parameters:
+            interface (Interface): Interface class instance.
+        """
         if cls._simulation_status == "playing":
             SimulationControl._simulation_status = "paused"
             interface.pause_button.config(text="Resume")
@@ -91,7 +124,13 @@ class SimulationControl:
             cls.simulation_step(interface)
 
     @classmethod
-    def stop_simulation(cls, interface):
+    def stop_simulation(cls, interface:Interface) -> None:
+        """
+        Stops and resets the simulation.
+
+        Parameters:
+            interface (Interface): Interface class instance.
+        """
         cls._simulation_status = "stopped"
         cls.throwback_chronon = 0
         cls.current_chronon = 0

@@ -11,6 +11,15 @@ from settings import simulation_parameters
 class DataHandler(ABC):
     """
     An abstract class to manipulate data.
+
+    Methods
+    -------
+    reset_data: Resets the temporary data.
+    chronon_data_handling: Handles the data from a single chronon.
+    final_data_handling: Handles the final data at the end of a simulation and agglomerates the previous temporary data.
+    calculate_life_expectancy: Calculates the life expectancy of entities.
+    handle_entities: Extracts data from entities.
+    handle_entity: Extracts data from an entity.
     """
     simulation_chronon_data = []
     simulation_data = None

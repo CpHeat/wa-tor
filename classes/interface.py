@@ -13,6 +13,25 @@ from settings import simulation_parameters
 class Interface:
     """
     Implements the visual interface for the simulation.
+
+    Methods
+    -------
+    initialize_interface: Initializes all the interface modules.
+    create_window: Creates the main window.
+    draw_canvas: Creates the canvas for the simulation output.
+    draw_counter: Creates the counter for entities and chronon.
+    draw_controls: Creates the control frame for the simulation parameters.
+    draw_alerts: Creates the alert space.
+    create_assets: Creates the images and set their size to use in the canvas.
+    set_cell_size: Sets the cell size to keep the window from overflowing.
+    input_component: Creates an input component.
+    open_history: Initializes, populates and opens the history window.
+    draw_history: Draws the history window.
+    update_canvas: Updates the canvas to match the new states of the simulation.
+    reset_canvas: Resets the canvas.
+    draw_wator: Draws a state of the simulation.
+    check_parameters: Checks if all inputs are valid.
+    check_parameter: Checks if a DoubleVar input is valid.
     """
 
     def __init__(self):
@@ -112,7 +131,7 @@ class Interface:
 
     def draw_counter(self) -> None:
         """
-        Creates the counter for entities and chronon
+        Creates the counter for entities and chronon.
         """
         fish_label = Label(self.frames['counter_frame'], text="Fishes:")
         fish_label.grid(row=0, column=0)
