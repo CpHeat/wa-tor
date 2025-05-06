@@ -81,7 +81,7 @@ class Planet:
                 else:
                     self.move_prepare(entity, choice)
 
-        self.entities = self.next_entities
+        self.entities = self.checked_entities
 
         if self.shuffle:
             random.shuffle(self.entities)
