@@ -204,6 +204,9 @@ class Interface:
         history_button = Button(self.frames['control_buttons_frame'], text="History", command=self.open_history)
         history_button.grid(row=3, column=2)
 
+        database_creation_button = Button(self.frames['control_buttons_frame'], text="Create database", command=PersistenceHandler.create_ddb)
+        database_creation_button.grid(row=4, column=2)
+
     def set_cell_size(self):
         self.cell_size = 800 // max(simulation_parameters['grid_width'], simulation_parameters['grid_height'])
         if self.cell_size < 3:

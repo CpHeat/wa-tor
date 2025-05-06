@@ -65,6 +65,7 @@ class SimulationControl:
             cls.throwback_chronon = cls.current_chronon
 
             wator_status = cls.planet.check_entities()
+            print("wator fish counter:", wator_status['nb_fish'])
             DataHandler.chronon_data_handling(cls.current_chronon, wator_status)
             grid = wator_status['grid']
 
