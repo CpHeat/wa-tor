@@ -14,17 +14,17 @@ class PersistenceHandler(ABC):
     @classmethod
     def create_ddb(cls):
         try:
-            conn = psycopg2.connect(dbname='postgres', user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"), host=os.getenv("POSTGRES_HOST"), port=os.getenv("POSTGRES_PORT"))
+            conn = psycopg2.connect(dbname='postgres', user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"), host=os.getenv("POSTGRES_HOST"), port=os.getenv("POSTGRES_PORT"), client_encoding="UTF-8")
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)  # important pour CREATE DATABASE
 
             cursor = conn.cursor()
-            cursor.execute(f'CREATE DATABASE "{os.getenv("POSTGRES_DB")}"')
-            print(f"Base de données '{os.getenv("POSTGRES_DB")}' créée avec succès.")
+            cursor.execute(f'CREATE DATABASE "{os.getenv("POSTGRES_DB")}" ENCODING "UTF8"')
+            print(f"Database '{os.getenv("POSTGRES_DB")}' created.")
 
             cursor.close()
             conn.close()
 
-            conn = psycopg2.connect(dbname=os.getenv("POSTGRES_DB"), user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"), host=os.getenv("POSTGRES_HOST"), port=os.getenv("POSTGRES_PORT"))
+            conn = psycopg2.connect(dbname=os.getenv("POSTGRES_DB"), user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"), host=os.getenv("POSTGRES_HOST"), port=os.getenv("POSTGRES_PORT"), client_encoding="UTF-8")
             cursor = conn.cursor()
 
             simulation_table_creation_request = """CREATE TABLE simulation(
@@ -92,9 +92,9 @@ class PersistenceHandler(ABC):
 
 
         except psycopg2.errors.DuplicateDatabase:
-            print(f"La base de données '{os.getenv("POSTGRES_DB")}' existe déjà.")
+            print(f"Database '{os.getenv("POSTGRES_DB")}' already exists.")
         except Exception as e:
-            print(f"Erreur lors de la création de la base : {e}")
+            print(f"Error while creating database : {e}")
 
     @classmethod
     def connect_ddb(cls):
@@ -103,7 +103,8 @@ class PersistenceHandler(ABC):
             port=os.getenv("POSTGRES_PORT"),
             dbname=os.getenv("POSTGRES_DB"),
             user=os.getenv("POSTGRES_USER"),
-            password=os.getenv("POSTGRES_PASSWORD")
+            password=os.getenv("POSTGRES_PASSWORD"),
+            client_encoding = "UTF-8"
         )
 
         return conn
@@ -114,13 +115,12 @@ class PersistenceHandler(ABC):
 
         try:
             cursor = conn.cursor()
-            print("connected")
 
             cursor.execute("SELECT * FROM simulation")
             return cursor.fetchall()
 
         except Exception as e:
-            print(f"Erreur lors de la lecture : {e}")
+            print(f"Error while reading database : {e}")
 
         finally:
             cursor.close()

@@ -11,15 +11,11 @@ class Fish(Animal):
     def move(self, position_list):
         self.age += 1
         old_position = {"x": self.x, "y": self.y}
-        print("old_position", old_position)
         verif = {"N": position_list[0] , "S": position_list[1], "E": position_list[2], "W": position_list[3]}
-
-        print("position_list", position_list)
 
         direction = []
         list_result = []
         for key, value in verif.items():
-            print(f"key {key}, value {value}")
             if value is None:
                 direction.append(key)   
         
@@ -37,5 +33,4 @@ class Fish(Animal):
             self.children_number += 1
             new_positions.append(old_position)
 
-        print("list new_positions", new_positions)
         return new_positions

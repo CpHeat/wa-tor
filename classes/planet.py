@@ -104,8 +104,7 @@ class Planet:
             if isinstance(self.grid[target_y][target_x], Fish):
                 self.shark_eats(entity, target_x, target_y)
 
-        if int(target_x) != int(previous_x) or int(target_y) != int(previous_y):
-            self.move_entity(entity, target_x, target_y)
+        self.move_entity(entity, target_x, target_y)
 
         if len(choice) == 2 and (target_x != previous_x or target_y != previous_y):
             self.reproduce_entity(entity, previous_x, previous_y)
@@ -153,9 +152,10 @@ class Planet:
     def move_entity(self, entity, x, y):
 
         self.grid[y][x] = entity
-        self.grid[entity.y][entity.x] = None
-        entity.x = x
-        entity.y = y
+        if entity.x != x or entity.y != y:
+            self.grid[entity.y][entity.x] = None
+            entity.x = x
+            entity.y = y
         self.next_entities.append(entity)
 
     def starved_shark(self, entity):
