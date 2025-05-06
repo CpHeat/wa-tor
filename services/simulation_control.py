@@ -7,7 +7,7 @@ class SimulationControl:
     current_chronon = 0
     throwback_chronon = 0
     _simulation_status = "playing"
-    _simulation_duration = simulation_parameters['simulation_duration']
+    simulation_duration = simulation_parameters['simulation_duration']
     _planet = None
 
     def __init__(self):
@@ -17,7 +17,7 @@ class SimulationControl:
     def set_parameters(cls, interface):
         simulation_parameters['grid_height'] = int(interface.grid_height_value.get())
         simulation_parameters['grid_width'] = int(interface.grid_width_value.get())
-        simulation_parameters['simulation_length'] = int(interface.simulation_length_value.get())
+        simulation_parameters['simulation_duration'] = int(interface.simulation_duration_value.get())
         simulation_parameters['fish_reproduction_time'] = int(interface.fish_reproduction_time_value.get())
         simulation_parameters['shark_reproduction_time'] = int(interface.shark_reproduction_time_value.get())
         simulation_parameters['shark_starvation_time'] = int(interface.shark_starvation_time_value.get())
@@ -36,6 +36,18 @@ class SimulationControl:
         interface.update_canvas()
 
         cls.planet = Planet()
+        initial_data = {
+            'entities': cls.planet.entities,
+            'dead_fishes': cls.planet.dead_fishes,
+            'dead_sharks': cls.planet.dead_sharks,
+            'nb_fish': cls.planet.count_fish,
+            'nb_shark': cls.planet.count_shark,
+            'nb_reproduction_shark': cls.planet.count_reproduced_shark,
+            'nb_reproduction_fish': cls.planet.count_reproduced_fish,
+        }
+
+        DataHandler.chronon_data_handling(0, initial_data)
+
         cls._simulation_status = "playing"
         cls.current_chronon = cls.throwback_chronon = 0
         interface.fish_nb_counter['text'] = cls.planet.count_fish
@@ -48,12 +60,12 @@ class SimulationControl:
     def simulation_step(cls, interface):
         if cls._simulation_status == "playing" and cls.current_chronon <= simulation_parameters['simulation_duration']:
 
-            wator_status = cls.planet.check_entities()
-            DataHandler.chronon_data_handling(wator_status)
-            grid = wator_status['grid']
-
             cls.current_chronon += 1
             cls.throwback_chronon = cls.current_chronon
+
+            wator_status = cls.planet.check_entities()
+            DataHandler.chronon_data_handling(cls.current_chronon, wator_status)
+            grid = wator_status['grid']
 
             interface.chronons_counter['text'] = cls.current_chronon
             interface.fish_nb_counter['text'] = wator_status['nb_fish']

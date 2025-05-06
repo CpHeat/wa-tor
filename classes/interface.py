@@ -5,6 +5,7 @@ from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoIm
 from PIL import Image, ImageTk, ImageOps
 
 from classes.planet import Fish, Shark
+from services.persistence_handler import PersistenceHandler
 from services.simulation_control import SimulationControl
 from settings import CELL_SIZE, simulation_parameters
 
@@ -27,11 +28,11 @@ class Interface:
 
         self.grid_height_value = None
         self.grid_width_value = None
-        self.simulation_length_value = None
+        self.simulation_duration_value = None
         self.fish_reproduction_time_value = None
         self.shark_reproduction_time_value = None
         self.shark_starvation_time_value = None
-        self.shark_starting_energy_value = None
+        self.shark_energy_gain_value = None
         self.shark_starting_population_value = None
         self.fish_starting_population_value = None
         self.chronon_duration_value = None
@@ -147,7 +148,7 @@ class Interface:
         self.shark_reproduction_time_value = self.input_component(self.frames['control_frame'], "Shark reproduction time:", simulation_parameters['shark_reproduction_time'], 5)
         self.shark_energy_gain_value = self.input_component(self.frames['control_frame'], "Shark energy gain:", simulation_parameters['shark_energy_gain'], 6)
         self.shark_starvation_time_value = self.input_component(self.frames['control_frame'], "Shark starvation time:", simulation_parameters['shark_starvation_time'], 7)
-        self.simulation_length_value = self.input_component(self.frames['control_frame'], "Simulation duration:", simulation_parameters['simulation_duration'], 8)
+        self.simulation_duration_value = self.input_component(self.frames['control_frame'], "Simulation duration:", simulation_parameters['simulation_duration'], 8)
         self.chronon_duration_value = self.input_component(self.frames['control_frame'], "Chronon duration (in ms):", simulation_parameters['chronon_duration'], 9)
 
 
@@ -291,7 +292,7 @@ class Interface:
         valid = self.check_parameter(self.shark_reproduction_time_value, "shark reproduction time value", 0, valid)
         valid = self.check_parameter(self.shark_energy_gain_value, "shark energy gain value", 1, valid)
         valid = self.check_parameter(self.shark_starvation_time_value, "shark starvation time value",0, valid)
-        valid = self.check_parameter(self.simulation_length_value, "simulation length value", 1, valid)
+        valid = self.check_parameter(self.simulation_duration_value, "simulation duration value", 1, valid)
         valid = self.check_parameter(self.chronon_duration_value, "chronon duration value", 0, valid)
 
         try:
@@ -329,8 +330,11 @@ class Interface:
 
         return valid
 
-    @classmethod
-    def open_history(cls):
+    def open_history(self):
+        self.draw_history()
+
+    def draw_history(self):
+
         history_window = Tk()
         history_window.title("Simulation history")
 
@@ -353,6 +357,8 @@ class Interface:
 
         label = ttk.Label(scrollable_frame, text="Simulations history:", font=("Arial", 14))
         label.pack(pady=10)
+
+        history = PersistenceHandler.get_history_content()
 
         # Contenu simulé
         for i in range(50):

@@ -33,7 +33,6 @@ class PersistenceHandler(ABC):
             cursor.execute("SELECT * FROM simulation")
             resultats = cursor.fetchall()
 
-            print("Contenu de la base :")
             for ligne in resultats:
                 print(ligne)
 
@@ -45,65 +44,26 @@ class PersistenceHandler(ABC):
             conn.close()
 
     @classmethod
-    def save_data(cls):
-        """
-        """
-
-        data = {
-            "simulation_id": 0,
-            "date": datetime.now(),
-            "duration": 50,
-            "grid_height": 10,
-            "grid_width": 10,
-            "animal_count": 54,
-            "fish_count": 12,
-            "shark_count": 47,
-            "life_expectancy": 2.87,
-            "fish_life_expectancy": 5.87,
-            "shark_life_expectancy": 6.51,
-            "reproduction": 10,
-            "fish_reproduction": 7,
-            "shark_reproduction": 5,
-            "fish_eaten": 45,
-            "shark_starved": 23,
-            "detail": [
-                {
-                    "chronon": 1,
-                    "animal_count": 14,
-                    "fish_count": 75,
-                    "shark_count": 54,
-                    "reproduction": 5,
-                    "fish_reproduction": 4,
-                    "shark_reproduction":3,
-                    "fish_eaten": 14,
-                    "shark_starved": 57,
-                },
-                {
-                    "chronon": 2,
-                    "animal_count": 58,
-                    "fish_count": 45,
-                    "shark_count": 1,
-                    "reproduction": 7,
-                    "fish_reproduction": 3,
-                    "shark_reproduction": 8,
-                    "fish_eaten": 145,
-                    "shark_starved": 87,
-                }
-            ]
-        }
+    def save_data(cls, data):
+        print("save data")
+        print("data :", data)
 
         conn = cls.connect_ddb()
 
         try:
+
+            print("save simulation")
             cursor = conn.cursor()
             simulation_request = """
                 INSERT INTO simulation (
-                    simulation_id, date, duration, grid_height, grid_width,
-                    animal_count, fish_count, shark_count, life_expectancy,
-                    fish_life_expectancy, shark_life_expectancy, reproduction,
-                    fish_reproduction, shark_reproduction, fish_eaten, shark_starved
+                    simulation_id, simulation_date, duration, grid_height, grid_width,
+                    fish_starting_population, shark_starting_population, fish_reproduction_time,
+                    shark_reproduction_time, shark_starvation_time, shark_energy_gain, shuffled_entities,
+                    animal_count, fish_count, shark_count, global_life_expectancy,
+                    fish_life_expectancy, shark_life_expectancy, total_reproduction,
+                    fish_reproduction, shark_reproduction, fishes_eaten, sharks_starved, total_deaths
                 ) VALUES (
-                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                    %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                 )
             """
 
@@ -113,28 +73,37 @@ class PersistenceHandler(ABC):
                 data["duration"],
                 data["grid_height"],
                 data["grid_width"],
+                data["fish_starting_population"],
+                data["shark_starting_population"],
+                data["fish_reproduction_time"],
+                data["shark_reproduction_time"],
+                data["shark_starvation_time"],
+                data["shark_energy_gain"],
+                data["shuffle_entities"],
                 data["animal_count"],
                 data["fish_count"],
                 data["shark_count"],
                 data["life_expectancy"],
                 data["fish_life_expectancy"],
                 data["shark_life_expectancy"],
-                data["reproduction"],
+                data["total_reproduction"],
                 data["fish_reproduction"],
                 data["shark_reproduction"],
-                data["fish_eaten"],
-                data["shark_starved"]
+                data["fishes_eaten"],
+                data["sharks_starved"],
+                data['total_deaths']
             )
 
             cursor.execute(simulation_request, values)
 
             for chronon_data in data['detail']:
+                print("save chronon_data")
                 simulation_detail_request = """
                     INSERT INTO simulation_detail (
-                        simulation_id, chronon, animal_count, fish_count, shark_count, reproduction,
-                        fish_reproduction, shark_reproduction, fish_eaten, shark_starved
+                        simulation_id, chronon, animal_count, fish_count, shark_count, total_reproduction,
+                        fish_reproduction, shark_reproduction, fishes_eaten, sharks_starved, total_deaths
                     ) VALUES (
-                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
+                        %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s
                     )
                 """
 
@@ -144,14 +113,34 @@ class PersistenceHandler(ABC):
                     chronon_data["animal_count"],
                     chronon_data["fish_count"],
                     chronon_data["shark_count"],
-                    chronon_data["reproduction"],
+                    chronon_data["total_reproduction"],
                     chronon_data["fish_reproduction"],
                     chronon_data["shark_reproduction"],
-                    chronon_data["fish_eaten"],
-                    chronon_data["shark_starved"]
+                    chronon_data["fishes_eaten"],
+                    chronon_data["sharks_starved"],
+                    chronon_data['total_deaths']
                 )
 
                 cursor.execute(simulation_detail_request, values)
+
+            for entity in data['entities']:
+                print("save entity")
+                simulation_entities_request = """
+                    INSERT INTO simulation_entities (simulation_id, entity_id, is_alive, age, species, children, fishes_eaten)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    """
+
+                values = (
+                    data["simulation_id"],
+                    entity["entity_id"],
+                    entity["is_alive"],
+                    entity["age"],
+                    entity["species"],
+                    entity["children"],
+                    entity["fishes_eaten"]
+                )
+
+                cursor.execute(simulation_entities_request, values)
 
             conn.commit()
 
@@ -163,14 +152,19 @@ class PersistenceHandler(ABC):
             conn.close()
 
     @classmethod
-    def get_previous_simulation_ids(cls):
-
+    def get_next_simulation_id(cls):
         conn = PersistenceHandler.connect_ddb()
 
         try:
             cursor = conn.cursor()
-            simulation_ids_request = "SELECT simulation_id FROM simulation"
+            simulation_ids_request = "SELECT simulation_id FROM simulation ORDER BY simulation_id DESC LIMIT 1"
             cursor.execute(simulation_ids_request)
+            results = cursor.fetchall()
+
+            if not results:
+                return 0
+            else:
+                return int(results[0][0]) + 1
 
         except Exception as e:
             print(f"Database error: {e}")
@@ -178,5 +172,3 @@ class PersistenceHandler(ABC):
         finally:
             cursor.close()
             conn.close()
-
-        print("simulation_ids_request", simulation_ids_request)
