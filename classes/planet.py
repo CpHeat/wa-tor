@@ -137,7 +137,7 @@ class Planet:
     def shark_eats(self, entity, x, y):
         entity.eat()
         self.destroy_entity(self.grid[y][x], x, y)
-        self.count_shark_eats += 1
+        #self.count_shark_eats += 1
         self.count_eaten_fish += 1
 
     def get_neighbors(self, x, y):
