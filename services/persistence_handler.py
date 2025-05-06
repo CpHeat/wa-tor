@@ -23,18 +23,14 @@ class PersistenceHandler(ABC):
         return conn
 
     @classmethod
-    def load_ddb(cls):
-
+    def load_data(cls):
         conn = cls.connect_ddb()
 
         try:
             cursor = conn.cursor()
 
             cursor.execute("SELECT * FROM simulation")
-            resultats = cursor.fetchall()
-
-            for ligne in resultats:
-                print(ligne)
+            return cursor.fetchall()
 
         except Exception as e:
             print(f"Erreur lors de la lecture : {e}")
@@ -45,14 +41,10 @@ class PersistenceHandler(ABC):
 
     @classmethod
     def save_data(cls, data):
-        print("save data")
-        print("data :", data)
 
         conn = cls.connect_ddb()
 
         try:
-
-            print("save simulation")
             cursor = conn.cursor()
             simulation_request = """
                 INSERT INTO simulation (
@@ -97,7 +89,6 @@ class PersistenceHandler(ABC):
             cursor.execute(simulation_request, values)
 
             for chronon_data in data['detail']:
-                print("save chronon_data")
                 simulation_detail_request = """
                     INSERT INTO simulation_detail (
                         simulation_id, chronon, animal_count, fish_count, shark_count, total_reproduction,
@@ -124,7 +115,6 @@ class PersistenceHandler(ABC):
                 cursor.execute(simulation_detail_request, values)
 
             for entity in data['entities']:
-                print("save entity")
                 simulation_entities_request = """
                     INSERT INTO simulation_entities (simulation_id, entity_id, is_alive, age, species, children, fishes_eaten)
                     VALUES (%s, %s, %s, %s, %s, %s, %s)
