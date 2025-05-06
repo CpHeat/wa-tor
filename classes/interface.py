@@ -32,6 +32,8 @@ class Interface:
     draw_wator: Draws a state of the simulation.
     check_parameters: Checks if all inputs are valid.
     check_parameter: Checks if a DoubleVar input is valid.
+    draw_grid: Draws the grid.
+    get_canvas_size: Gets the canvas size.
     """
 
     def __init__(self):
@@ -333,13 +335,26 @@ class Interface:
 
         self.canvas.update_idletasks()
 
-    def get_canvas_size(self):
+    def get_canvas_size(self) -> tuple[int, int]:
+        """
+        Gets the canvas size.
+
+        Returns:
+            canvas_width (int), canvas_height (int): Canvas dimensions.
+        """
         canvas_width = simulation_parameters['grid_width'] * self.cell_size
         canvas_height = simulation_parameters['grid_height'] * self.cell_size
 
         return canvas_width, canvas_height
 
-    def draw_grid(self, canvas_width, canvas_height):
+    def draw_grid(self, canvas_width:int, canvas_height:int) -> None:
+        """
+        Draws the grid.
+
+        Parameters:
+            canvas_width (int): The width of the canvas.
+            canvas_height (int): The height of the canvas.
+        """
         for i in range(simulation_parameters['grid_width'] + 1):
             x = i * self.cell_size
             line = self.canvas.create_line(x, 0, x, canvas_height, fill="black")

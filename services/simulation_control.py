@@ -14,6 +14,7 @@ class SimulationControl:
     simulation_step: Advances the simulation one step further.
     pause_simulation: Pauses the simulation.
     stop_simulation: Stops and resets the simulation.
+    reset_simulation: Resets the simulation data and interface.
     """
     current_chronon = 0
     throwback_chronon = 0
@@ -134,6 +135,9 @@ class SimulationControl:
 
     @classmethod
     def reset_simulation(cls, interface:'Interface') -> None:
+        """
+        Resets the simulation data and interface.
+        """
         cls.throwback_chronon = 0
         cls.current_chronon = 0
         DataHandler.reset_data()
