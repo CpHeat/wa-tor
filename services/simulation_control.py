@@ -33,6 +33,7 @@ class SimulationControl:
     def start_simulation(cls, interface):
         cls.set_parameters(interface)
 
+        interface.reset_canvas()
         interface.update_canvas()
 
         cls.planet = Planet()

@@ -1,11 +1,11 @@
 # Default parameters
 simulation_parameters = {
     # Grid size (width/height)
-    'grid_width': 15,
-    'grid_height': 15,
+    'grid_width': 20,
+    'grid_height': 20,
     # Sharks/Fishes number
-    'shark_starting_population': 2,
-    'fish_starting_population': 2,
+    'shark_starting_population': 10,
+    'fish_starting_population': 10,
     # Reproduction cycle duration
     'fish_reproduction_time': 8,
     'shark_reproduction_time': 12,
@@ -14,13 +14,10 @@ simulation_parameters = {
     # Starting energy of sharks
     'shark_energy_gain': 3,
     # Simulation duration (in chronons)
-    'simulation_duration': 10,
+    'simulation_duration': 50,
     # Chronon duration (in ms)
-    'chronon_duration': 100,
+    'chronon_duration': 500,
 
     'follow_entities': False,
     'shuffle_entities': True
 }
-
-# Cell size (in px)
-CELL_SIZE = 50
