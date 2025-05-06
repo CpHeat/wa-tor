@@ -104,6 +104,34 @@ simulation_parameters = {
 Assurez-vous d’avoir un fichier principal comme :
 `python main.py`
 
+ L'exécution fournit une interface graphique (GUI) pour interagir avec le simulateur Wa-Tor. Voici ses principales fonctionnalités :
+
+✅ Boutons de contrôle
+
+Start / Pause /Stop : Lance/ met en pause / arrête la simulation.
+
+Previous /Next : Avancer / reculer d'un chronon après avoir mettre en pause la simulation.
+
+Create Database : Créer une base de données pour sauvegarder les données et les statistiques de la simulation.
+
+✅ Paramètres modifiables
+Des champs permettent d’ajuster les paramètres avant de démarrer :
+
+Taille de la grille (taille)
+
+Nombre initial de poissons (nbPoissons)
+
+Nombre initial de requins (nbRequins)
+
+Énergie des requins (energieRequin)
+
+Fréquence de reproduction des poissons et requins (freqReprodPoisson, freqReprodRequin)
+
+✅ Affichage visuel
+La grille est affichée sous forme de canvas :
+
+Les cases vides, poissons, et requins sont colorées différemment pour un suivi visuel en temps réel.
+
 
 ## ⚙️ Fonctionnalités clés
 
