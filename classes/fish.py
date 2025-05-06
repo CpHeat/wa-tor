@@ -8,26 +8,26 @@ class Fish(Animal):
         self.reproduction_time = simulation_parameters["fish_reproduction_time"]
         self.reproduction_left =  self.reproduction_time
 
-    def move(self, list):
+    def move(self, position_list):
         self.age += 1
         old_position = {"x": self.x, "y": self.y}
-        verif = {"N": list[0] , "S": list[1], "E": list[2], "W": list[3]}
+        verif = {"N": position_list[0] , "S": position_list[1], "E": position_list[2], "W": position_list[3]}
         direction = []
         list_result = []
         for key, value in verif.items():
-            if(value == None):
+            if value is None:
                 direction.append(key)   
         
-        if( len(direction) > 0):
+        if len(direction) > 0:
             list_result = self.choice_direction(direction)
 
-        if(len(list_result) == 1):
+        if len(list_result) == 1:
             new_position = list_result[0]
         else:
             new_position = old_position       
             list_result.append(new_position)
 
-        if(self.reproduce(new_position , old_position) == True):
+        if self.reproduce(new_position, old_position):
             self.children_number += 1
             list_result.append(old_position)
 

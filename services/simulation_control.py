@@ -7,7 +7,7 @@ class SimulationControl:
     current_chronon = 0
     throwback_chronon = 0
     _simulation_status = "playing"
-    _simulation_duration = simulation_parameters['simulation_duration']
+    simulation_duration = simulation_parameters['simulation_duration']
     _planet = None
 
     def __init__(self):
@@ -17,7 +17,7 @@ class SimulationControl:
     def set_parameters(cls, interface):
         simulation_parameters['grid_height'] = int(interface.grid_height_value.get())
         simulation_parameters['grid_width'] = int(interface.grid_width_value.get())
-        simulation_parameters['simulation_length'] = int(interface.simulation_length_value.get())
+        simulation_parameters['simulation_duration'] = int(interface.simulation_duration_value.get())
         simulation_parameters['fish_reproduction_time'] = int(interface.fish_reproduction_time_value.get())
         simulation_parameters['shark_reproduction_time'] = int(interface.shark_reproduction_time_value.get())
         simulation_parameters['shark_starvation_time'] = int(interface.shark_starvation_time_value.get())
@@ -37,16 +37,15 @@ class SimulationControl:
 
         cls.planet = Planet()
         initial_data = {
-            'grid': cls.planet.grid,
             'entities': cls.planet.entities,
-            'fishes_eaten': cls.planet.count_eaten_fish,
-            'nb_shark_starved': cls.planet.nb_shark_starved,
-            'nb_fish': cls.planet.count_fish, 'nb_shark': cls.planet.count_shark,
+            'dead_fishes': cls.planet.dead_fishes,
+            'dead_sharks': cls.planet.dead_sharks,
+            'nb_fish': cls.planet.count_fish,
+            'nb_shark': cls.planet.count_shark,
             'nb_reproduction_shark': cls.planet.count_reproduced_shark,
             'nb_reproduction_fish': cls.planet.count_reproduced_fish,
-            'dead_fishes_age': cls.planet.dead_fishes_age,
-            'dead_sharks_age': cls.planet.dead_sharks_age
         }
+
         DataHandler.chronon_data_handling(0, initial_data)
 
         cls._simulation_status = "playing"
