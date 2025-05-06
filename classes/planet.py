@@ -98,20 +98,17 @@ class Planet:
         previous_x = copy.deepcopy(entity.x)
         previous_y = copy.deepcopy(entity.y)
 
-        # check si on mange
+        # check if eat
         if isinstance(entity, Shark):
             # eat first
             if isinstance(self.grid[target_y][target_x], Fish):
                 self.shark_eats(entity, target_x, target_y)
 
-        self.move_entity(entity, target_x, target_y)
+        if int(target_x) != int(previous_x) or int(target_y) != int(previous_y):
+            self.move_entity(entity, target_x, target_y)
 
-        if target_x != previous_x or target_y != previous_y:
-            if len(choice) == 2:
-                print("reproduce")
-                self.reproduce_entity(entity, previous_x, previous_y)
-        elif len(choice) == 2:
-            print("can't move to reproduce")
+        if len(choice) == 2 and (target_x != previous_x or target_y != previous_y):
+            self.reproduce_entity(entity, previous_x, previous_y)
 
     def reproduce_entity(self, entity, x, y):
         if isinstance(entity, Fish):

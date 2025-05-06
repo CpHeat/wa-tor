@@ -4,8 +4,8 @@ simulation_parameters = {
     'grid_width': 20,
     'grid_height': 20,
     # Sharks/Fishes number
-    'shark_starting_population': 20,
-    'fish_starting_population': 20,
+    'shark_starting_population': 0,
+    'fish_starting_population': 200,
     # Reproduction cycle duration
     'fish_reproduction_time': 8,
     'shark_reproduction_time': 12,
@@ -16,7 +16,7 @@ simulation_parameters = {
     # Simulation duration (in chronons)
     'simulation_duration': 50,
     # Chronon duration (in ms)
-    'chronon_duration': 500,
+    'chronon_duration': 200,
 
     'follow_entities': False,
     'shuffle_entities': True
