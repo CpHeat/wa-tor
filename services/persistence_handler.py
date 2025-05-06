@@ -4,11 +4,97 @@ from datetime import datetime
 
 import psycopg2
 from dotenv import load_dotenv
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 class PersistenceHandler(ABC):
 
     load_dotenv()
+
+    @classmethod
+    def create_ddb(cls):
+        try:
+            conn = psycopg2.connect(dbname='postgres', user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"), host=os.getenv("POSTGRES_HOST"), port=os.getenv("POSTGRES_PORT"))
+            conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)  # important pour CREATE DATABASE
+
+            cursor = conn.cursor()
+            cursor.execute(f'CREATE DATABASE "{os.getenv("POSTGRES_DB")}"')
+            print(f"Base de données '{os.getenv("POSTGRES_DB")}' créée avec succès.")
+
+            cursor.close()
+            conn.close()
+
+            conn = psycopg2.connect(dbname=os.getenv("POSTGRES_DB"), user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"), host=os.getenv("POSTGRES_HOST"), port=os.getenv("POSTGRES_PORT"))
+            cursor = conn.cursor()
+
+            simulation_table_creation_request = """CREATE TABLE simulation(
+   simulation_id SMALLINT,
+   simulation_date TIMESTAMP,
+   duration SMALLINT,
+   grid_height SMALLINT,
+   grid_width SMALLINT,
+   fish_starting_population SMALLINT,
+   shark_starting_population SMALLINT,
+   fish_reproduction_time SMALLINT,
+   shark_reproduction_time SMALLINT,
+   shark_starvation_time SMALLINT,
+   shark_energy_gain SMALLINT,
+   shuffled_entities BOOLEAN,
+   animal_count SMALLINT,
+   fish_count SMALLINT,
+   shark_count SMALLINT,
+   global_life_expectancy NUMERIC(8,2)  ,
+   fish_life_expectancy NUMERIC(8,2)  ,
+   shark_life_expectancy NUMERIC(8,2)  ,
+   total_reproduction SMALLINT,
+   fish_reproduction SMALLINT,
+   shark_reproduction SMALLINT,
+   fishes_eaten SMALLINT,
+   sharks_starved SMALLINT,
+   total_deaths SMALLINT,
+   PRIMARY KEY(simulation_id)
+);"""
+            cursor.execute(simulation_table_creation_request)
+            conn.commit()
+
+            simulation_detail_table_creation_request = """CREATE TABLE simulation_detail(
+   simulation_id SMALLINT,
+   chronon SMALLINT,
+   animal_count SMALLINT,
+   fish_count SMALLINT,
+   shark_count SMALLINT,
+   total_reproduction SMALLINT,
+   fish_reproduction SMALLINT,
+   shark_reproduction SMALLINT,
+   fishes_eaten SMALLINT,
+   sharks_starved SMALLINT,
+   total_deaths SMALLINT,
+   PRIMARY KEY(simulation_id, chronon)
+);"""
+            cursor.execute(simulation_detail_table_creation_request)
+            conn.commit()
+
+            simulation_entities_table_creation_request = """CREATE TABLE simulation_entities(
+   simulation_id SMALLINT,
+   entity_id SMALLINT,
+   is_alive BOOLEAN,
+   age SMALLINT,
+   species VARCHAR(50) ,
+   children SMALLINT,
+   fishes_eaten SMALLINT,
+   PRIMARY KEY(simulation_id, entity_id)
+);"""
+            cursor.execute(simulation_entities_table_creation_request)
+            conn.commit()
+
+            cursor.close()
+            conn.close()
+
+
+        except psycopg2.errors.DuplicateDatabase:
+            print(f"La base de données '{os.getenv("POSTGRES_DB")}' existe déjà.")
+        except Exception as e:
+            print(f"Erreur lors de la création de la base : {e}")
 
     @classmethod
     def connect_ddb(cls):
@@ -28,6 +114,7 @@ class PersistenceHandler(ABC):
 
         try:
             cursor = conn.cursor()
+            print("connected")
 
             cursor.execute("SELECT * FROM simulation")
             return cursor.fetchall()
