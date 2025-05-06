@@ -1,6 +1,7 @@
-.venv
+.venv*
 .idea
 .env
 todo
 test.py
 *__pycache__
+classes/*__pycache__
