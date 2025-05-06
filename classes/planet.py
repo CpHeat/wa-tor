@@ -12,8 +12,8 @@ class Planet:
         '''
         self.height = simulation_parameters.get('grid_height')
         self.width = simulation_parameters.get('grid_width')
-        self.num_fish = self.count_fish = simulation_parameters.get('fish_starting_population')
-        self.num_shark = self.count_shark = simulation_parameters.get('shark_starting_population')
+        self.count_fish = simulation_parameters.get('fish_starting_population')
+        self.count_shark = simulation_parameters.get('shark_starting_population')
 
         self.count_reproduced_fish = self.count_reproduced_shark = 0
         self.grid = [[None for _ in range(self.width)] for _ in range(self.height)]
@@ -27,14 +27,12 @@ class Planet:
         self.next_entities = []
         self.populate()
 
-        self.check_counter = 0
-
     def populate(self):
         '''Populate randomly the grid with fishes and sharks
         '''
-        random_indices = random.sample(range(self.height * self.width), self.num_fish + self.num_shark)
+        random_indices = random.sample(range(self.height * self.width), self.count_fish + self.count_shark)
 
-        random_indices_shark = random.sample(random_indices, self.num_shark)
+        random_indices_shark = random.sample(random_indices, self.count_shark)
 
         for index, i in enumerate(random_indices_shark):
             y = i // self.width  # y
@@ -65,7 +63,6 @@ class Planet:
 
     def check_entities(self):
         self.next_entities = []
-        self.check_counter += 1
 
         # Reset to zero on each call — statistics for each round
         self.count_reproduced_fish = self.count_reproduced_shark = 0
@@ -107,7 +104,7 @@ class Planet:
 
         self.move_entity(entity, target_x, target_y)
 
-        if len(choice) == 2:
+        if len(choice) == 2 and (target_x != previous_x or target_y != previous_y):
             self.reproduce_entity(entity, previous_x, previous_y)
 
     def reproduce_entity(self, entity, x, y):
@@ -125,6 +122,7 @@ class Planet:
 
     def shark_eats(self, entity, x, y):
         entity.eat()
+        self.count_fish -= 1
         self.dead_fishes.append(copy.deepcopy(self.grid[y][x]))
         self.destroy_entity(self.grid[y][x], x, y)
 

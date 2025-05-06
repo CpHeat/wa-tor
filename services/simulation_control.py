@@ -69,8 +69,8 @@ class SimulationControl:
             grid = wator_status['grid']
 
             interface.chronons_counter['text'] = cls.current_chronon
-            interface.fish_nb_counter['text'] = wator_status['nb_fish']
-            interface.shark_nb_counter['text'] = wator_status['nb_shark']
+            interface.fish_nb_counter['text'] = cls.planet.count_fish
+            interface.shark_nb_counter['text'] = cls.planet.count_shark
             interface.throwback_chronon_label['text'] = cls.throwback_chronon
 
             interface.draw_wator(grid)
