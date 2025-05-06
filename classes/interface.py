@@ -7,7 +7,7 @@ from PIL import Image, ImageTk, ImageOps
 from classes.planet import Fish, Shark
 from services.persistence_handler import PersistenceHandler
 from services.simulation_control import SimulationControl
-from settings import CELL_SIZE, simulation_parameters
+from settings import simulation_parameters
 
 
 class Interface:
@@ -21,6 +21,9 @@ class Interface:
         self.images = {}
         self.image_ids = []
         self.grids = []
+        self.grid_lines = []
+
+        self.cell_size = 50
 
         self.fish_nb_counter = None
         self.shark_nb_counter = None
@@ -82,23 +85,23 @@ class Interface:
     def create_assets(self):
 
         fish_image = Image.open("resources/fish.png")
-        fish_image = fish_image.resize((CELL_SIZE-2, CELL_SIZE-2))
+        fish_image = fish_image.resize((self.cell_size-2, self.cell_size-2))
         fish_image = ImageTk.PhotoImage(fish_image)
 
         followed_fish_image = Image.open("resources/followed_fish.png")
-        followed_fish_image = followed_fish_image.resize((CELL_SIZE-2, CELL_SIZE-2))
+        followed_fish_image = followed_fish_image.resize((self.cell_size-2, self.cell_size-2))
         followed_fish_image = ImageTk.PhotoImage(followed_fish_image)
 
         shark_image = Image.open("resources/shark.png")
-        shark_image = shark_image.resize((CELL_SIZE-2, CELL_SIZE-2))
+        shark_image = shark_image.resize((self.cell_size-2, self.cell_size-2))
         shark_image = ImageTk.PhotoImage(shark_image)
 
         followed_shark_image = Image.open("resources/followed_shark.png")
-        followed_shark_image = followed_shark_image.resize((CELL_SIZE-2, CELL_SIZE-2))
+        followed_shark_image = followed_shark_image.resize((self.cell_size-2, self.cell_size-2))
         followed_shark_image = ImageTk.PhotoImage(followed_shark_image)
 
         empty_image = Image.open("resources/empty.png")
-        empty_image = empty_image.resize((CELL_SIZE-2, CELL_SIZE-2))
+        empty_image = empty_image.resize((self.cell_size-2, self.cell_size-2))
         empty_image = ImageTk.PhotoImage(empty_image)
 
         self.images = {
@@ -201,35 +204,50 @@ class Interface:
         history_button = Button(self.frames['control_buttons_frame'], text="History", command=self.open_history)
         history_button.grid(row=3, column=2)
 
+    def set_cell_size(self):
+        self.cell_size = 800 // max(simulation_parameters['grid_width'], simulation_parameters['grid_height'])
+        if self.cell_size < 3:
+            self.cell_size = 3
+
+        self.create_assets()
+
     def update_canvas(self):
-        canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
-        canvas_height = simulation_parameters['grid_height'] * CELL_SIZE
+        self.set_cell_size()
+
+        canvas_width = simulation_parameters['grid_width'] * self.cell_size
+        canvas_height = simulation_parameters['grid_height'] * self.cell_size
 
         self.canvas.config(width=canvas_width, height=canvas_height)
 
         for i in range(simulation_parameters['grid_width'] + 1):
-            x = i * CELL_SIZE
-            self.canvas.create_line(x, 0, x, canvas_height, fill="black")
+            x = i * self.cell_size
+            line = self.canvas.create_line(x, 0, x, canvas_height, fill="black")
+            self.grid_lines.append(line)
 
         for j in range(simulation_parameters['grid_height'] + 1):
-            y = j * CELL_SIZE
-            self.canvas.create_line(0, y, canvas_width, y, fill="black")
+            y = j * self.cell_size
+            line = self.canvas.create_line(0, y, canvas_width, y, fill="black")
+            self.grid_lines.append(line)
 
         self.canvas.update_idletasks()
 
     def draw_canvas(self):
-        canvas_width = simulation_parameters['grid_width'] * CELL_SIZE
-        canvas_height = simulation_parameters['grid_height'] * CELL_SIZE
+        self.set_cell_size()
+
+        canvas_width = simulation_parameters['grid_width'] * self.cell_size
+        canvas_height = simulation_parameters['grid_height'] * self.cell_size
         canvas = Canvas(self.frames['simulation_frame'], width=canvas_width, height=canvas_height, bg='#42b6f5')
         canvas.grid(row=0, column=0)
 
         for i in range(simulation_parameters['grid_width'] + 1):
-            x = i * CELL_SIZE
-            canvas.create_line(x, 0, x, canvas_height, fill="black")
+            x = i * self.cell_size
+            line = canvas.create_line(x, 0, x, canvas_height, fill="black")
+            self.grid_lines.append(line)
 
         for j in range(simulation_parameters['grid_height'] + 1):
-            y = j * CELL_SIZE
-            canvas.create_line(0, y, canvas_width, y, fill="black")
+            y = j * self.cell_size
+            line = canvas.create_line(0, y, canvas_width, y, fill="black")
+            self.grid_lines.append(line)
 
         self.canvas = canvas
 
@@ -273,7 +291,7 @@ class Interface:
                         img = self.images.get(cell, self.images["empty"])
 
                     img_id = self.canvas.create_image(
-                        y * CELL_SIZE + 1, x * CELL_SIZE + 1, anchor=NW, image=img
+                        y * self.cell_size + 1, x * self.cell_size + 1, anchor=NW, image=img
                     )
                     row_ids.append(img_id)
                 self.image_ids.append(row_ids)
@@ -306,6 +324,10 @@ class Interface:
                     img = self.images.get(cell, self.images["empty"])
                     self.canvas.itemconfig(cell, image=img)
                     self.pause_button.config(text="Pause")
+
+        for line in self.grid_lines:
+            self.canvas.delete(line)
+        self.grid_lines.clear()
 
     def check_parameters(self) -> None:
         """
