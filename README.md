@@ -116,7 +116,7 @@ Create Database : Créer une base de données pour sauvegarder les données et l
 
 ✅ Paramètres modifiables
 Des champs permettent d’ajuster les paramètres avant de démarrer :
-![image](https://github.com/user-attachments/assets/fa95aa8e-65b5-4d80-b3af-a0efc6fbd74a)
+
 
 Taille de la grille (height, width)
 
@@ -127,6 +127,8 @@ Nombre initial de requins (Shark starting population)
 Énergie des requins (Shark energy gain)
 
 Fréquence de reproduction des poissons et requins (Fish reproduction time, Shark reproduction time)
+
+![image](https://github.com/user-attachments/assets/3159b40e-2dde-4cef-b605-95de6a3a739a)
 
 Durée de la simulation (Simulation duration)
 
