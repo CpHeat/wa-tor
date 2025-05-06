@@ -278,13 +278,9 @@ class Interface:
         for data in history_data:
             simulation_label = ttk.Label(history_frame, text=f"Simulation #{data[0]} ({data[1]}):")
             simulation_label.pack(anchor="w", padx=10)
-            parameters_label = ttk.Label(history_frame, text="Parameters:")
-            parameters_label.pack(anchor="w", padx=10)
-            parameters_content = ttk.Label(history_frame, text=f"duration {data[2]}, grid height {data[3]}, grid_width {data[4]}, fish starting population {data[5]}, shark starting population {data[6]}, fish reproduction time {data[7]}, shark reproduction time {data[8]}, shark starvation time {data[9]}, shark energy gain {data[10]}, shuffled {data[11]}")
+            parameters_content = ttk.Label(history_frame, text=f"Parameters: duration {data[2]}, grid height {data[3]}, grid_width {data[4]}, fish starting population {data[5]}, shark starting population {data[6]}, fish reproduction time {data[7]}, shark reproduction time {data[8]}, shark starvation time {data[9]}, shark energy gain {data[10]}, shuffled {data[11]}")
             parameters_content.pack(anchor="w", padx=10)
-            results_label = ttk.Label(history_frame, text="Results:")
-            results_label.pack(anchor="w", padx=10)
-            results_content = ttk.Label(history_frame, text=f"fish count {data[13]}, shark count {data[14]}, fish reproduction {data[19]}, shark reproduction {data[20]}")
+            results_content = ttk.Label(history_frame, text=f"Results: fish count {data[13]}, shark count {data[14]}, fish reproduction {data[19]}, shark reproduction {data[20]}")
             results_content.pack(anchor="w", padx=10)
 
         history_window.mainloop()
@@ -329,11 +325,21 @@ class Interface:
         """
         self.set_cell_size()
 
-        canvas_width = simulation_parameters['grid_width'] * self.cell_size
-        canvas_height = simulation_parameters['grid_height'] * self.cell_size
+        canvas_width, canvas_height = self.get_canvas_size()
 
         self.canvas.config(width=canvas_width, height=canvas_height)
 
+        self.draw_grid(canvas_width, canvas_height)
+
+        self.canvas.update_idletasks()
+
+    def get_canvas_size(self):
+        canvas_width = simulation_parameters['grid_width'] * self.cell_size
+        canvas_height = simulation_parameters['grid_height'] * self.cell_size
+
+        return canvas_width, canvas_height
+
+    def draw_grid(self, canvas_width, canvas_height):
         for i in range(simulation_parameters['grid_width'] + 1):
             x = i * self.cell_size
             line = self.canvas.create_line(x, 0, x, canvas_height, fill="black")
@@ -343,8 +349,6 @@ class Interface:
             y = j * self.cell_size
             line = self.canvas.create_line(0, y, canvas_width, y, fill="black")
             self.grid_lines.append(line)
-
-        self.canvas.update_idletasks()
 
     def reset_canvas(self) -> None:
         """

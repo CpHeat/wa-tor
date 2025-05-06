@@ -139,7 +139,7 @@ class PersistenceHandler(ABC):
         try:
             cursor = conn.cursor()
 
-            cursor.execute("SELECT * FROM simulation")
+            cursor.execute("SELECT * FROM simulation ORDER BY simulation_id DESC")
             return cursor.fetchall()
 
         except Exception as e:

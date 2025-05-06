@@ -51,11 +51,10 @@ class SimulationControl:
         Parameters:
             interface (Interface): Interface class instance.
         """
-        cls.set_parameters(interface)
 
-        interface.reset_canvas()
+
+        cls.reset_simulation(interface)
         interface.update_canvas()
-        DataHandler.reset_data()
 
         cls.planet = Planet()
         initial_data = {
@@ -71,7 +70,6 @@ class SimulationControl:
         DataHandler.chronon_data_handling(0, initial_data)
 
         cls._simulation_status = "playing"
-        cls.current_chronon = cls.throwback_chronon = 0
         interface.fish_nb_counter['text'] = cls.planet.count_fish
         interface.shark_nb_counter['text'] = cls.planet.count_shark
 
@@ -132,6 +130,10 @@ class SimulationControl:
             interface (Interface): Interface class instance.
         """
         cls._simulation_status = "stopped"
+        cls.reset_simulation(interface)
+
+    @classmethod
+    def reset_simulation(cls, interface:'Interface') -> None:
         cls.throwback_chronon = 0
         cls.current_chronon = 0
         DataHandler.reset_data()
@@ -139,4 +141,5 @@ class SimulationControl:
         interface.fish_nb_counter['text'] = 0
         interface.shark_nb_counter['text'] = 0
         interface.throwback_chronon_label['text'] = 0
+        cls.set_parameters(interface)
         interface.reset_canvas()
