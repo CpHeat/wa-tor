@@ -116,16 +116,25 @@ Create Database : Créer une base de données pour sauvegarder les données et l
 
 ✅ Paramètres modifiables
 Des champs permettent d’ajuster les paramètres avant de démarrer :
+![image](https://github.com/user-attachments/assets/fa95aa8e-65b5-4d80-b3af-a0efc6fbd74a)
 
-Taille de la grille (taille)
+Taille de la grille (height, width)
 
-Nombre initial de poissons (nbPoissons)
+Nombre initial de poissons (Fish starting population)
 
-Nombre initial de requins (nbRequins)
+Nombre initial de requins (Shark starting population)
 
-Énergie des requins (energieRequin)
+Énergie des requins (Shark energy gain)
 
-Fréquence de reproduction des poissons et requins (freqReprodPoisson, freqReprodRequin)
+Fréquence de reproduction des poissons et requins (Fish reproduction time, Shark reproduction time)
+
+Durée de la simulation (Simulation duration)
+
+✅ Options supplémentaires
+
+Follow entities (suivre les entités, à cocher).
+
+Shuffle entities (mélanger les entités à chaque tour, à cocher).
 
 ✅ Affichage visuel
 La grille est affichée sous forme de canvas :
