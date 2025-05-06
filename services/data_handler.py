@@ -128,7 +128,6 @@ class DataHandler(ABC):
         }
 
         for chronon_data in cls.simulation_chronon_data:
-            print("simulation_chronon_data")
             data['detail'].append(chronon_data)
 
         data['entities'] = cls.handle_entities(simulation_chronon_data['entities'])

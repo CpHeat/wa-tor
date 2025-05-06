@@ -202,6 +202,7 @@ class PersistenceHandler(ABC):
             )
 
             cursor.execute(simulation_request, values)
+            conn.commit()
 
             for chronon_data in data['detail']:
                 simulation_detail_request = """
@@ -228,6 +229,7 @@ class PersistenceHandler(ABC):
                 )
 
                 cursor.execute(simulation_detail_request, values)
+                conn.commit()
 
             for entity in data['entities']:
                 simulation_entities_request = """
@@ -246,8 +248,7 @@ class PersistenceHandler(ABC):
                 )
 
                 cursor.execute(simulation_entities_request, values)
-
-            conn.commit()
+                conn.commit()
 
         except Exception as e:
             print(f"Database error: {e}")

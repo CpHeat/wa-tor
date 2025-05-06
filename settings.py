@@ -10,13 +10,13 @@ simulation_parameters = {
     'fish_reproduction_time': 8,
     'shark_reproduction_time': 12,
     # Sharks starvation time
-    'shark_starvation_time': 6,
+    'shark_starvation_time': 7,
     # Starting energy of sharks
-    'shark_energy_gain': 3,
+    'shark_energy_gain': 4,
     # Simulation duration (in chronons)
-    'simulation_duration': 50,
+    'simulation_duration': 100,
     # Chronon duration (in ms)
-    'chronon_duration': 200,
+    'chronon_duration': 100,
 
     'follow_entities': False,
     'shuffle_entities': True

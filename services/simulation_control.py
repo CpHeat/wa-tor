@@ -1,4 +1,3 @@
-from classes.interface import Interface
 from classes.planet import Planet
 from services.data_handler import DataHandler
 from settings import simulation_parameters
@@ -23,7 +22,7 @@ class SimulationControl:
     _planet = None
 
     @classmethod
-    def set_parameters(cls, interface:Interface) -> None:
+    def set_parameters(cls, interface:'Interface') -> None:
         """
         Sets the parameters of the simulation from the input values.
 
@@ -45,7 +44,7 @@ class SimulationControl:
         simulation_parameters['shuffle_entities'] = interface.shuffle_entities_value.get()
 
     @classmethod
-    def start_simulation(cls, interface:Interface) -> None:
+    def start_simulation(cls, interface:'Interface') -> None:
         """
         Starts the simulation.
 
@@ -56,6 +55,7 @@ class SimulationControl:
 
         interface.reset_canvas()
         interface.update_canvas()
+        DataHandler.reset_data()
 
         cls.planet = Planet()
         initial_data = {
@@ -79,7 +79,7 @@ class SimulationControl:
         interface.window.after(simulation_parameters['chronon_duration'], lambda: cls.simulation_step(interface))
 
     @classmethod
-    def simulation_step(cls, interface:Interface) -> None:
+    def simulation_step(cls, interface:'Interface') -> None:
         """
         Advances the simulation one step further.
 
@@ -108,7 +108,7 @@ class SimulationControl:
                 DataHandler.final_data_handling(wator_status)
 
     @classmethod
-    def pause_simulation(cls, interface:Interface) -> None:
+    def pause_simulation(cls, interface:'Interface') -> None:
         """
         Pauses the simulation.
 
@@ -124,7 +124,7 @@ class SimulationControl:
             cls.simulation_step(interface)
 
     @classmethod
-    def stop_simulation(cls, interface:Interface) -> None:
+    def stop_simulation(cls, interface:'Interface') -> None:
         """
         Stops and resets the simulation.
 
