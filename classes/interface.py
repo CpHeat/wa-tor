@@ -138,6 +138,26 @@ class Interface:
 
         return component_value
 
+    def open_history(self):
+        history_data = PersistenceHandler.load_data()
+
+        history_window, history_frame = self.draw_history()
+
+        for data in history_data:
+            print("data", data)
+            simulation_label = ttk.Label(history_frame, text=f"Simulation #{data[0]} ({data[1]}):")
+            simulation_label.pack(anchor="w", padx=10)
+            parameters_label = ttk.Label(history_frame, text="Parameters:")
+            parameters_label.pack(anchor="w", padx=10)
+            parameters_content = ttk.Label(history_frame, text=f"duration {data[2]}, grid height {data[3]}, grid_width {data[4]}, fish starting population {data[5]}, shark starting population {data[6]}, fish reproduction time {data[7]}, shark reproduction time {data[8]}, shark starvation time {data[9]}, shark energy gain {data[10]}, shuffled {data[11]}")
+            parameters_content.pack(anchor="w", padx=10)
+            results_label = ttk.Label(history_frame, text="Results:")
+            results_label.pack(anchor="w", padx=10)
+            results_content = ttk.Label(history_frame, text=f"fish count {data[13]}, shark count {data[14]}, fish reproduction {data[19]}, shark reproduction {data[20]}")
+            results_content.pack(anchor="w", padx=10)
+
+        history_window.mainloop()
+
     def draw_controls(self):
 
         self.grid_height_value = self.input_component(self.frames['control_frame'], "Grid height:", simulation_parameters['grid_height'], 0)
@@ -330,15 +350,14 @@ class Interface:
 
         return valid
 
-    def open_history(self):
-        self.draw_history()
+
 
     def draw_history(self):
 
         history_window = Tk()
         history_window.title("Simulation history")
 
-        canvas = Canvas(history_window, borderwidth=0, width=1000, height=1000)
+        canvas = Canvas(history_window, borderwidth=0, width=1500, height=1000)
         scrollbar = ttk.Scrollbar(history_window, orient="vertical", command=canvas.yview)
         scrollable_frame = ttk.Frame(canvas)
 
@@ -358,11 +377,4 @@ class Interface:
         label = ttk.Label(scrollable_frame, text="Simulations history:", font=("Arial", 14))
         label.pack(pady=10)
 
-        history = PersistenceHandler.get_history_content()
-
-        # Contenu simulé
-        for i in range(50):
-            item_label = ttk.Label(scrollable_frame, text=f"Simulation #{i + 1}")
-            item_label.pack(anchor="w", padx=10)
-
-        history_window.mainloop()
+        return history_window, scrollable_frame

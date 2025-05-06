@@ -232,9 +232,6 @@ class DataHandler(ABC):
         else:
             global_life_expectancy = 0
 
-        print("sharks_age",sharks_age)
-        print("fishes_age",fishes_age)
-
         return {
             'fish_life_expectancy': round(fishes_life_expectancy, 2),
             'shark_life_expectancy': round(sharks_life_expectancy, 2),
