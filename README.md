@@ -1,10 +1,10 @@
 # Wa-Tor Simulation
 Ce projet est une simulation du monde marin inspirée du modèle Wa-Tor, où des poissons et des requins évoluent, se déplacent, se reproduisent, et interagissent sur une grille torique.
 
-## 📂 Structure du projet
+## 📂 Structure des classes
 
                     ┌────────────────┐
-                    │    Animal      │  (classe abstraite)
+                    │    Animal      │  
                     └────────────────┘
                        ▲    |      ▲
               ┌─────────┘   |       └─────────┐
@@ -13,7 +13,7 @@ Ce projet est une simulation du monde marin inspirée du modèle Wa-Tor, où des
       └─────────────┘       |          └─────────────┘
                             | 
                     ┌────────────────┐                      ┌────────────────────────────┐
-                    │    Planet      │----------------------│    simulation_control      │
+                    │    Planet      │----------------------│    SimulationControl      │
                     └────────────────┘                      └────────────────────────────┘
 
 
@@ -71,6 +71,18 @@ Ce projet est une simulation du monde marin inspirée du modèle Wa-Tor, où des
   - options pour suivre/mélanger les entités.
 
 ---
+### **SimulationControl** (`simulation_control.py`)
+
+- Sert d’interface entre la logique de simulation (`Planet`) et l’interface graphique.  
+- Rôles :
+  - Lire les paramètres depuis l’interface utilisateur (`set_parameters()`).
+  - Lancer la simulation (`start_simulation()`).
+  - Gérer chaque étape temporelle (appelée “chronon”) (`simulation_step()`).
+  - Mettre en pause ou reprendre (`pause_simulation()`).
+  - Arrêter et réinitialiser (`stop_simulation()`).
+- Utilise la classe `DataHandler` pour enregistrer les données à chaque étape.
+- Dépend fortement d’un objet `interface` qui contient les composants graphiques : canevas, compteurs, boutons, etc.
+
 
 ## 🚀 Démarrer la simulation
 
@@ -87,7 +99,19 @@ simulation_parameters = {
     'follow_entities': True,
     'shuffle_entities': True
 }
+```
 3. **Exécuter la simulation**
 Assurez-vous d’avoir un fichier principal comme :
 `python main.py`
+
+
+## ⚙️ Fonctionnalités clés
+
+✅ Déplacement aléatoire des animaux (nord, sud, est, ouest, avec rebouclage sur les bords)  
+✅ Reproduction selon un cycle propre à chaque espèce  
+✅ Prédation : les requins mangent les poissons  
+✅ Statistiques : comptage des naissances, morts, entités restantes  
+✅ Option de suivre des entités spécifiques (`follow_entities`)  
+✅ Option de mélanger l’ordre des entités à chaque tour (`shuffle_entities`)  
+
 
