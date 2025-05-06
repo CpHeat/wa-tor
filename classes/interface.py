@@ -147,7 +147,6 @@ class Interface:
         history_window, history_frame = self.draw_history()
 
         for data in history_data:
-            print("data", data)
             simulation_label = ttk.Label(history_frame, text=f"Simulation #{data[0]} ({data[1]}):")
             simulation_label.pack(anchor="w", padx=10)
             parameters_label = ttk.Label(history_frame, text="Parameters:")
@@ -259,7 +258,6 @@ class Interface:
         self.alert_label.grid(row=12, column=0, columnspan=3)
 
     def draw_wator(self, grid, throwback = None):
-        print("draw wator")
 
         if not throwback:
             self.grids.append(copy.deepcopy(grid))

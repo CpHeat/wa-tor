@@ -4,8 +4,8 @@ simulation_parameters = {
     'grid_width': 20,
     'grid_height': 20,
     # Sharks/Fishes number
-    'shark_starting_population': 0,
-    'fish_starting_population': 200,
+    'shark_starting_population': 40,
+    'fish_starting_population': 80,
     # Reproduction cycle duration
     'fish_reproduction_time': 8,
     'shark_reproduction_time': 12,
