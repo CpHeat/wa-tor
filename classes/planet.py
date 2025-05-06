@@ -70,10 +70,12 @@ class Planet:
         self.dead_sharks = []
 
         for entity in self.entities:
+            # If entity didn't die this turn
             if not entity is None:
                 possibilities_from_neighbors = self.get_neighbors(entity.x, entity.y)
                 choice = entity.move(possibilities_from_neighbors)
 
+                # If list is empty it means it is a dead shark
                 if len(choice) == 0:
                     self.starved_shark(entity)
                 else:
@@ -93,8 +95,8 @@ class Planet:
 
         target_x = choice[0].get('x')
         target_y = choice[0].get('y')
-        previous_x = entity.x
-        previous_y = entity.y
+        previous_x = copy.deepcopy(entity.x)
+        previous_y = copy.deepcopy(entity.y)
 
         # check si on mange
         if isinstance(entity, Shark):
@@ -104,8 +106,12 @@ class Planet:
 
         self.move_entity(entity, target_x, target_y)
 
-        if len(choice) == 2 and (target_x != previous_x or target_y != previous_y):
-            self.reproduce_entity(entity, previous_x, previous_y)
+        if target_x != previous_x or target_y != previous_y:
+            if len(choice) == 2:
+                print("reproduce")
+                self.reproduce_entity(entity, previous_x, previous_y)
+        elif len(choice) == 2:
+            print("can't move to reproduce")
 
     def reproduce_entity(self, entity, x, y):
         if isinstance(entity, Fish):
