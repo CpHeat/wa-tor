@@ -1,6 +1,5 @@
 import os
 from abc import ABC
-from datetime import datetime
 
 import psycopg2
 from dotenv import load_dotenv
@@ -8,11 +7,16 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 class PersistenceHandler(ABC):
-
+    """
+    An abstract class to handle data persistence in the DDB.
+    """
     load_dotenv()
 
     @classmethod
-    def create_ddb(cls):
+    def create_ddb(cls) -> None:
+        """
+        Creates the database and its tables.
+        """
         try:
             conn = psycopg2.connect(dbname='postgres', user=os.getenv("POSTGRES_USER"), password=os.getenv("POSTGRES_PASSWORD"), host=os.getenv("POSTGRES_HOST"), port=os.getenv("POSTGRES_PORT"), client_encoding="UTF-8")
             conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)  # important pour CREATE DATABASE
@@ -90,14 +94,19 @@ class PersistenceHandler(ABC):
             cursor.close()
             conn.close()
 
-
         except psycopg2.errors.DuplicateDatabase:
             print(f"Database '{os.getenv("POSTGRES_DB")}' already exists.")
         except Exception as e:
             print(f"Error while creating database : {e}")
 
     @classmethod
-    def connect_ddb(cls):
+    def connect_ddb(cls) -> psycopg2.extensions.connection:
+        """
+        Connects to the database.
+
+        Returns:
+            conn (psycopg2.extensions.connection): A database connection.
+        """
         conn = psycopg2.connect(
             host=os.getenv("POSTGRES_HOST"),
             port=os.getenv("POSTGRES_PORT"),
@@ -110,7 +119,13 @@ class PersistenceHandler(ABC):
         return conn
 
     @classmethod
-    def load_data(cls):
+    def load_data(cls) -> list|None:
+        """
+        Loads data from the database.
+
+        Returns:
+            A data list.
+        """
         conn = cls.connect_ddb()
 
         try:
@@ -127,8 +142,13 @@ class PersistenceHandler(ABC):
             conn.close()
 
     @classmethod
-    def save_data(cls, data):
+    def save_data(cls, data:dict) -> None:
+        """
+        Saves data in the database.
 
+        Parameters:
+            data (dict): a dict containing all the data to persist.
+        """
         conn = cls.connect_ddb()
 
         try:
@@ -229,7 +249,13 @@ class PersistenceHandler(ABC):
             conn.close()
 
     @classmethod
-    def get_next_simulation_id(cls):
+    def get_next_simulation_id(cls) -> int|None:
+        """
+        Returns the next available simulation ID.
+
+        Returns:
+            id (int): An ID.
+        """
         conn = PersistenceHandler.connect_ddb()
 
         try:
