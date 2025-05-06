@@ -128,10 +128,13 @@ Nombre initial de requins (Shark starting population)
 
 Fréquence de reproduction des poissons et requins (Fish reproduction time, Shark reproduction time)
 
+Durée de la simulation (Simulation duration)
+
+
 ![image](https://github.com/user-attachments/assets/22e5ff84-5d8d-4bbb-b769-77f4b76b5dbd)
 
 
-Durée de la simulation (Simulation duration)
+
 
 ✅ Options supplémentaires
 
