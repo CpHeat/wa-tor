@@ -206,6 +206,15 @@ class Interface:
         canvas_height = simulation_parameters['grid_height'] * CELL_SIZE
 
         self.canvas.config(width=canvas_width, height=canvas_height)
+
+        for i in range(simulation_parameters['grid_width'] + 1):
+            x = i * CELL_SIZE
+            self.canvas.create_line(x, 0, x, canvas_height, fill="black")
+
+        for j in range(simulation_parameters['grid_height'] + 1):
+            y = j * CELL_SIZE
+            self.canvas.create_line(0, y, canvas_width, y, fill="black")
+
         self.canvas.update_idletasks()
 
     def draw_canvas(self):
@@ -229,6 +238,7 @@ class Interface:
         self.alert_label.grid(row=12, column=0, columnspan=3)
 
     def draw_wator(self, grid, throwback = None):
+        print("draw wator")
 
         if not throwback:
             self.grids.append(copy.deepcopy(grid))
@@ -282,7 +292,8 @@ class Interface:
                             img = self.images.get(cell, self.images["shark"])
                     else:
                         img = self.images.get(cell, self.images["empty"])
-                    self.canvas.itemconfig(self.image_ids[x][y], image=img)
+                    if len(self.image_ids) > x and len(self.image_ids[x]) > y:
+                        self.canvas.itemconfig(self.image_ids[x][y], image=img)
 
     def reset_canvas(self):
         """
