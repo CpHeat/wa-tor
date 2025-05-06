@@ -1,68 +1,7 @@
-"""
-dict{'grid', 'entities', 'fishes_eaten', 'nb_fish', 'nb_shark', 'nb_reproduction_shark', 'nb_reproduction_fish', 'dead_fishes_age', 'dead_sharks_age'}
-
-esperance de vie des poissons:
-a chaque tour calculer la moyene du tour, + le nombre de poissons concernés, ajouter a la moyene précédente * nb de poissons morts totaux, diviser par poissons totaux + novueaux poissons, stocker moyene + poissons totaux actualisés
-
-nb reproduction moyenne
-previous * nb de tour + nouvelle / nb de tour +1
-
-en fin de simulation
-generer une esperance de vie generale
-generer un taux de reproduction general
-recup nb de poissons
-recup nb de requins
-
-savoir combien de poissons a mangé un requin en moyenne, au min, au max
-
-
-
-
-forme finale du data a enregistrer :
-
-dict = {
-    "simulation_id": 0
-    "date": DATE,
-   "duration":SMALLINT,
-   "grid_height" SMALLINT,
-   "grid_width" SMALLINT,
-   fish_starting_population SMALLINT,
-   shark_starting_population SMALLINT,
-   fish_reproduction_time SMALLINT,
-   shark_reproduction_time SMALLINT,
-   shark_starvation_time SMALLINT,
-   shark_energy_gain SMALLINT,
-   shuffled_entities BOOLEAN,
-   "animal_count" SMALLINT,
-   "fish_count" SMALLINT,
-   "shark_count" SMALLINT,
-   "life_expectancy" NUMERIC(8,2)  ,
-   "fish_life_expectancy" NUMERIC(8,2)  ,
-   "shark_life_expectancy" NUMERIC(8,2)  ,
-   "reproduction" SMALLINT,
-   "fish_reproduction" SMALLINT,
-   "shark_reproduction" SMALLINT,
-   "fishes_eaten" SMALLINT,
-   "shark_starved" SMALLINT,
-   "detail": {
-       "chronon":,
-       animal_count SMALLINT,
-       fish_count SMALLINT,
-       shark_count SMALLINT,
-       reproduction SMALLINT,
-       fish_reproduction SMALLINT,
-       shark_reproduction SMALLINT,
-       fishes_eaten SMALLINT,
-       shark_starved SMALLINT,
-   }
-}
-
-
-
-"""
 from abc import ABC
 from datetime import datetime
 
+from classes.animal import Animal
 from classes.fish import Fish
 from classes.shark import Shark
 from services.persistence_handler import PersistenceHandler
@@ -70,6 +9,9 @@ from settings import simulation_parameters
 
 
 class DataHandler(ABC):
+    """
+    An abstract class to manipulate data.
+    """
     simulation_chronon_data = []
     simulation_data = None
     temporary_data = {
@@ -83,7 +25,10 @@ class DataHandler(ABC):
     }
 
     @classmethod
-    def reset_data(cls):
+    def reset_data(cls) -> None:
+        """
+        Resets the temporary data.
+        """
         cls.simulation_chronon_data = []
         cls.simulation_data = None
         cls.temporary_data = {
@@ -97,26 +42,14 @@ class DataHandler(ABC):
         }
 
     @classmethod
-    def chronon_data_handling(cls, simulation_chronon: int, simulation_chronon_data: dict):
+    def chronon_data_handling(cls, simulation_chronon: int, simulation_chronon_data: dict) -> None:
         """
-        calculer les enfant nés
-        stocker les poissons morts
-        stocker le nb d'individus
-        stocker l'age des morts
+        Handles the data from a single chronon.
 
-
-        initial_data = {
-            'entities': cls.planet.entities,
-            'fishes_eaten': cls.planet.count_eaten_fish,
-            'nb_shark_starved': cls.planet.nb_shark_starved,
-            'nb_fish': cls.planet.count_fish, 'nb_shark': cls.planet.count_shark,
-            'nb_reproduction_shark': cls.planet.count_reproduced_shark,
-            'nb_reproduction_fish': cls.planet.count_reproduced_fish,
-            'dead_fishes_age': cls.planet.dead_fishes_age,
-            'dead_sharks_age': cls.planet.dead_sharks_age
-        }
+        Parameters:
+            simulation_chronon (int): The chronon number.
+            simulation_chronon_data (dict): The chronon data.
         """
-
         dead_fishes = len(simulation_chronon_data['dead_fishes'])
         dead_sharks = len(simulation_chronon_data['dead_sharks'])
         dead_animals = dead_fishes + dead_sharks
@@ -142,26 +75,15 @@ class DataHandler(ABC):
         for dead_shark in simulation_chronon_data['dead_sharks']:
             cls.temporary_data['sharks_starved'].append(dead_shark)
 
-        # for entity in simulation_chronon_data['entities']:
-        #     if isinstance(entity, Shark):
-        #         if entity.fishes_eaten > cls.temporary_data['top_eater']:
-        #             cls.temporary_data['top_eater'] = entity.fishes_eaten
-
         cls.simulation_chronon_data.append(chronon_data)
 
     @classmethod
-    def final_data_handling(cls, simulation_chronon_data):
+    def final_data_handling(cls, simulation_chronon_data) -> None:
         """
-        initial_data = {
-            'entities': cls.planet.entities,
-            'fishes_eaten': cls.planet.count_eaten_fish,
-            'nb_shark_starved': cls.planet.nb_shark_starved,
-            'nb_fish': cls.planet.count_fish, 'nb_shark': cls.planet.count_shark,
-            'nb_reproduction_shark': cls.planet.count_reproduced_shark,
-            'nb_reproduction_fish': cls.planet.count_reproduced_fish,
-            'dead_fishes_age': cls.planet.dead_fishes_age,
-            'dead_sharks_age': cls.planet.dead_sharks_age
-        }
+        Handles the final data at the end of a simulation and agglomerates the previous temporary data.
+
+        Parameters:
+            simulation_chronon_data (dict): The final chronon data.
         """
         simulation_id = PersistenceHandler.get_next_simulation_id()
         life_expectancies = cls.calculate_life_expectancy()
@@ -197,6 +119,7 @@ class DataHandler(ABC):
         }
 
         for chronon_data in cls.simulation_chronon_data:
+            print("simulation_chronon_data")
             data['detail'].append(chronon_data)
 
         data['entities'] = cls.handle_entities(simulation_chronon_data['entities'])
@@ -204,8 +127,10 @@ class DataHandler(ABC):
         PersistenceHandler.save_data(data)
 
     @classmethod
-    def calculate_life_expectancy(cls):
-
+    def calculate_life_expectancy(cls) -> dict:
+        """
+        Calculates the life expectancy of entities.
+        """
         fishes_age = 0
         fishes_divider = 0
         sharks_age = 0
@@ -239,8 +164,16 @@ class DataHandler(ABC):
         }
 
     @classmethod
-    def handle_entities(cls, living_entities):
+    def handle_entities(cls, living_entities:list[Animal]) -> list:
+        """
+        Extracts data from entities.
 
+        Parameters:
+            living_entities (list[Animal]): List of entities.
+
+        Returns:
+            entities_data (list): Entities data.
+        """
         entities_data = []
         i = 0
         for entity in living_entities:
@@ -256,7 +189,18 @@ class DataHandler(ABC):
         return entities_data
 
     @classmethod
-    def handle_entity(cls, entity, is_alive, id):
+    def handle_entity(cls, entity:Fish|Shark, is_alive:bool, id:int) -> dict:
+        """
+        Extracts data from an entity.
+
+        Parameters:
+            entity (Animal): An entity.
+            is_alive (bool): Is the entity alive.
+            id (int): ID of the entity.
+
+        Returns:
+            A dict containing all the relevant entity data.
+        """
         if isinstance(entity, Fish):
             species = "Fish"
             fishes_eaten = 0
