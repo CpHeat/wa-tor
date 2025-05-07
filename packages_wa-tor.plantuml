@@ -1,0 +1,39 @@
+@startuml packages_wa-tor
+set namespaceSeparator none
+package "wa-tor" as wa-tor {
+}
+package "wa-tor.classes" as wa-tor.classes {
+}
+package "wa-tor.classes.animal" as wa-tor.classes.animal {
+}
+package "wa-tor.classes.fish" as wa-tor.classes.fish {
+}
+package "wa-tor.classes.interface" as wa-tor.classes.interface {
+}
+package "wa-tor.classes.planet" as wa-tor.classes.planet {
+}
+package "wa-tor.classes.shark" as wa-tor.classes.shark {
+}
+package "wa-tor.main" as wa-tor.main {
+}
+package "wa-tor.services" as wa-tor.services {
+}
+package "wa-tor.services.data_handler" as wa-tor.services.data_handler {
+}
+package "wa-tor.services.persistence_handler" as wa-tor.services.persistence_handler {
+}
+package "wa-tor.services.simulation_control" as wa-tor.services.simulation_control {
+}
+package "wa-tor.settings" as wa-tor.settings {
+}
+package "wa-tor.tests" as wa-tor.tests {
+}
+package "wa-tor.tests.test_Planet" as wa-tor.tests.test_Planet {
+}
+package "wa-tor.tests.test_fish" as wa-tor.tests.test_fish {
+}
+package "wa-tor.tests.test_shark" as wa-tor.tests.test_shark {
+}
+wa-tor.main --> wa-tor.classes.interface
+wa-tor.main --> wa-tor.services.persistence_handler
+@enduml

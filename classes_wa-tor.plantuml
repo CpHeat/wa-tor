@@ -1,0 +1,137 @@
+@startuml associations_only
+set namespaceSeparator none
+class "Animal" as Animal{
+  age : int
+  children_number : int
+  followed : bool
+  reproduction_left : int
+  reproduction_time : int
+  x : int
+  y : int
+  choice_direction(choice_list: List[str]) -> List[Dict[str, int]]
+  reproduce(new_position: Dict[str, int], old_position: Dict[str, int]) -> bool
+}
+class "DataHandler" as DataHandler {
+  simulation_chronon_data : list
+  simulation_data : NoneType
+  temporary_data : dict
+  calculate_life_expectancy()
+  chronon_data_handling(simulation_chronon: int, simulation_chronon_data: dict)
+  final_data_handling(simulation_chronon_data)
+  handle_entities(living_entities)
+  handle_entity(entity, is_alive, id)
+  reset_data()
+}
+class "Fish" as Fish {
+  age
+  children_number
+  reproduction_left : int
+  reproduction_time : int
+  move(position_list: List[Any]) -> List[Dict[str, int]]
+}
+class "Interface" as Interface {
+  alert_label : Label, NoneType
+  canvas : Canvas, NoneType
+  cell_size : int
+  chronon_duration_value : DoubleVar, NoneType
+  chronons_counter : Label, NoneType
+  fish_nb_counter : Label, NoneType
+  fish_reproduction_time_value : DoubleVar, NoneType
+  fish_starting_population_value : DoubleVar, NoneType
+  follow_entities_value : BooleanVar, NoneType
+  frames : dict
+  grid_height_value : DoubleVar, NoneType
+  grid_lines : list
+  grid_width_value : DoubleVar, NoneType
+  grids : list
+  image_ids : list
+  images : dict
+  next_button : Button, NoneType
+  pause_button : Button, NoneType
+  previous_button : Button, NoneType
+  shark_energy_gain_value : DoubleVar, NoneType
+  shark_nb_counter : Label, NoneType
+  shark_reproduction_time_value : DoubleVar, NoneType
+  shark_starting_population_value : DoubleVar, NoneType
+  shark_starvation_time_value : DoubleVar, NoneType
+  shuffle_entities_value : BooleanVar, NoneType
+  simulation_duration_value : DoubleVar, NoneType
+  start_button : Button, NoneType
+  stop_button : Button, NoneType
+  throwback_chronon_label : Label, NoneType
+  window : NoneType, Tk
+  check_parameter(parameter: DoubleVar, parameter_name: str, min_value, valid: bool) -> bool
+  check_parameters() -> None
+  create_assets()
+  create_window()
+  draw_alerts()
+  draw_canvas()
+  draw_controls()
+  draw_counter()
+  draw_history()
+  draw_wator(grid, throwback)
+  initialize_interface()
+  input_component(frame, text, default_value, row)
+  open_history()
+  reset_canvas()
+  set_cell_size()
+  update_canvas()
+}
+class "PersistenceHandler" as PersistenceHandler {
+  connect_ddb()
+  create_ddb()
+  get_next_simulation_id()
+  load_data()
+  save_data(data)
+}
+class "Planet" as Planet {
+  count_fish : int
+  count_reproduced_fish : int
+  count_reproduced_shark : int
+  count_shark : int
+  dead_fishes : List[Fish], list
+  dead_sharks : List[Shark], list
+  entities : List[Any], list
+  follow_fish : bool
+  follow_shark : bool
+  grid : List[List[Optional[Any]]]
+  height : int
+  next_entities : List[Any], list
+  shuffle : bool
+  width : int
+  check_entities() -> Dict[str, Any]
+  destroy_entity(entity: Any, x: int, y: int) -> None
+  get_grid() -> List[List[Optional[Any]]]
+  get_neighbors(x: int, y: int) -> List[Optional[Any]]
+  move_entity(entity: Any, x: int, y: int) -> None
+  move_prepare(entity: Any, choice: List[Dict[str, int]]) -> None
+  populate() -> None
+  reproduce_entity(entity: Any, x: int, y: int) -> None
+  shark_eats(entity: Shark, x: int, y: int) -> None
+  starved_shark(entity: Shark) -> None
+}
+class "Shark" as Shark {
+  age
+  children_number
+  fishes_eaten : int
+  reproduction_left : int
+  reproduction_time : int
+  shark_energy_gain : int
+  shark_starvation_left : int
+  shark_starvation_time : int
+  eat() -> None
+  move(position_list: List[Any]) -> List[Dict[str, int]]
+}
+class "SimulationControl" as SimulationControl {
+  current_chronon : int
+  simulation_duration
+  throwback_chronon : int
+  pause_simulation(interface)
+  set_parameters(interface)
+  simulation_step(interface)
+  start_simulation(interface)
+  stop_simulation(interface)
+}
+
+
+@enduml

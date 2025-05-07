@@ -1,0 +1,14 @@
+@startuml associations_only
+set namespaceSeparator none
+' Héritage
+Fish --|> Animal : hérite
+Shark --|> Animal : hérite
+
+' Associations
+Planet *--> Fish : contient
+Planet *--> Shark : contient
+SimulationControl --> Planet : crée
+Interface -->  SimulationControl: pilote
+SimulationControl --> DataHandler : utilise
+DataHandler --> PersistenceHandler : utilise pour persistance
+@enduml
