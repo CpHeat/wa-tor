@@ -1,0 +1,45 @@
+wa\-tor.tests package
+=====================
+
+Submodules
+----------
+
+wa\-tor.tests.test\_Planet module
+---------------------------------
+
+.. automodule:: wa-tor.tests.test_Planet
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+wa\-tor.tests.test\_conn\_db module
+-----------------------------------
+
+.. automodule:: wa-tor.tests.test_conn_db
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+wa\-tor.tests.test\_fish module
+-------------------------------
+
+.. automodule:: wa-tor.tests.test_fish
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+wa\-tor.tests.test\_shark module
+--------------------------------
+
+.. automodule:: wa-tor.tests.test_shark
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: wa-tor.tests
+   :members:
+   :show-inheritance:
+   :undoc-members:
