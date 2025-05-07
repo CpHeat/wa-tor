@@ -1,8 +1,7 @@
 import copy
-from tkinter import Tk, Label, IntVar, Entry, Button, Canvas, NW, Frame, PhotoImage, messagebox, TclError, Checkbutton, \
-    BooleanVar, DoubleVar, ttk
+from tkinter import Tk, Label, Entry, Button, Canvas, NW, Frame, TclError, Checkbutton, BooleanVar, DoubleVar, ttk
 
-from PIL import Image, ImageTk, ImageOps
+from PIL import Image, ImageTk
 
 from classes.planet import Fish, Shark
 from services.persistence_handler import PersistenceHandler

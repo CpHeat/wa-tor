@@ -1,5 +1,4 @@
 from classes.interface import Interface
-from services.persistence_handler import PersistenceHandler
 
 interface = Interface()
 

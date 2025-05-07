@@ -1,6 +1,4 @@
 from classes.planet import Planet
-from classes.fish import Fish
-from classes.shark import Shark
 import unittest
 
 

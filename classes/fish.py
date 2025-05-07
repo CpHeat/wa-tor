@@ -1,7 +1,6 @@
 from typing import List, Dict, Any
 from settings import simulation_parameters
 from classes.animal import Animal
-import random
 
 
 class Fish(Animal):
