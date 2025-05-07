@@ -131,9 +131,7 @@ Fréquence de reproduction des poissons et requins (Fish reproduction time, Shar
 Durée de la simulation (Simulation duration)
 
 
-![image](https://github.com/user-attachments/assets/22e5ff84-5d8d-4bbb-b769-77f4b76b5dbd)
-
-
+![image](https://github.com/user-attachments/assets/f476da11-60ca-4778-b740-9825a2ff32a0)
 
 
 ✅ Options supplémentaires
@@ -158,3 +156,11 @@ Les cases vides, poissons, et requins sont colorées différemment pour un suivi
 ✅ Option de mélanger l’ordre des entités à chaque tour (`shuffle_entities`)  
 
 
+ 
+
+
+## ⚙️ Contributions
+
+Chaïma : Classe planète, tests unitaires, debugging, diagrammes, présentation
+Aurélien : Classes Animal/Fish/Shark, tests unitaires, debugging
+Charles: Classes Interface/SimulationControl/DataHandler/PersistenceHandler, debugging, MCD, PowerBI
