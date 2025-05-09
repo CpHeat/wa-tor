@@ -161,6 +161,6 @@ Les cases vides, poissons, et requins sont colorées différemment pour un suivi
 
 ## ⚙️ Contributions
 
-Chaïma : Classe planète, tests unitaires, debugging, diagrammes, présentation  
+Chaima : Classe planète, tests unitaires, debugging, diagrammes, présentation  
 Aurélien : Classes Animal/Fish/Shark, tests unitaires, debugging  
 Charles: Classes Interface/SimulationControl/DataHandler/PersistenceHandler, debugging, MCD, PowerBI
