@@ -5,8 +5,8 @@ Fish --|> Animal : hérite
 Shark --|> Animal : hérite
 
 ' Associations
-Planet *--> Fish : contient
-Planet *--> Shark : contient
+Planet "1" *--> "*" Fish : contient
+Planet "1" *--> "*" Shark : contient
 SimulationControl --> Planet : crée
 Interface -->  SimulationControl: pilote
 SimulationControl --> DataHandler : utilise
