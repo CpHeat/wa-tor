@@ -86,7 +86,7 @@ Ce projet est une simulation du monde marin inspirée du modèle Wa-Tor, où des
 
 ## 🚀 Démarrer la simulation
 
-1. **Installer Python 3 et les dépendances (si nécessaire dans le fichier requirements.txt avec la commande: python3 -m pip freeze > requirements.txt)**
+1. **Installer Python 3 et les dépendances (si nécessaire dans le fichier requirements.txt)**
 
 2. **Configurer les paramètres**  
 Dans le fichier `settings.py` :
