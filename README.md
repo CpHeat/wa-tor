@@ -92,7 +92,7 @@ Ce projet est une simulation du monde marin inspirée du modèle Wa-Tor, où des
 Dans le fichier `.env` :
 Entrez les paramètres de votre propre serveur PostgreSQL
 
-3. **Exécuter la simulation**
+3. **Exécuter la simulation**  
 Assurez-vous d’avoir un fichier principal comme :
 `python main.py`
 
