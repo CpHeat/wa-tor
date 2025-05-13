@@ -89,17 +89,9 @@ Ce projet est une simulation du monde marin inspirée du modèle Wa-Tor, où des
 1. **Installer Python 3 et les dépendances (si nécessaire dans le fichier requirements.txt)**
 
 2. **Configurer les paramètres**  
-Dans le fichier `settings.py` :
-```python
-simulation_parameters = {
-    'grid_height': 20,
-    'grid_width': 20,
-    'fish_starting_population': 50,
-    'shark_starting_population': 20,
-    'follow_entities': True,
-    'shuffle_entities': True
-}
-```
+Dans le fichier `.env` :
+Entrez les paramètres de votre propre serveur PostgreSQL
+
 3. **Exécuter la simulation**
 Assurez-vous d’avoir un fichier principal comme :
 `python main.py`
